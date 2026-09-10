@@ -1,0 +1,135 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { EVENT, RACE_FORMATS, OBJECTIVES } from '../data/event';
+import { useCountdown } from '../hooks/useCountdown';
+import { fetchIndividualCategories } from '../api/individualApi';
+import { fetchRelayCategories } from '../api/teamApi';
+import type { BackendCategory } from '../api/individualApi';
+import Reveal from '../components/Reveal';
+import TrackRegistration from '../components/TrackRegistration';
+
+export default function Home() {
+  const { days, hours, minutes, seconds } = useCountdown(EVENT.isoDate);
+
+  const [individualCategories, setIndividualCategories] = useState<BackendCategory[] | null>(null);
+  const [relayCategories, setRelayCategories] = useState<BackendCategory[] | null>(null);
+
+  useEffect(() => {
+    fetchIndividualCategories().then(setIndividualCategories).catch(() => setIndividualCategories([]));
+    fetchRelayCategories().then(setRelayCategories).catch(() => setRelayCategories([]));
+  }, []);
+
+  function feeFor(code: string): number | null {
+    const source = code === 'relay' ? relayCategories : individualCategories;
+    const category = source?.find((c) => c.code === code);
+    if (!category) return null;
+    const price = Number(category.price);
+    return price > 0 ? price : null;
+  }
+
+  return (
+    <main>
+      <section className="hero">
+        <div className="hero-bg" aria-hidden="true" />
+
+        <div className="hero-inner">
+          <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+          <h1>{EVENT.motto}</h1>
+          <p className="lede hero-lede">
+            {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt for a
+            10KM Corporate Relay, a 10KM Individual Race, or the 5KM Fun Race &amp; Walk.
+          </p>
+
+          <div className="hero-facts">
+            <span>{EVENT.date}</span>
+            <span className="dot">·</span>
+            <span>{EVENT.venue}</span>
+          </div>
+
+          <div className="hero-distances">
+            {RACE_FORMATS.map((d) => {
+              const fee = feeFor(d.categoryCode);
+              return (
+                <span key={d.categoryCode} className="hero-distance-pill">
+                  <span className="hero-distance-pill-main">
+                    <strong>{d.code}</strong> {d.label}
+                  </span>
+                  <span className="hero-distance-pill-fee">{fee ? `K${fee}` : ''}</span>
+                </span>
+              );
+            })}
+          </div>
+
+          <div className="hero-cta">
+            <Link to="/register" className="btn-primary">
+              Register now
+            </Link>
+            <a href="#categories" className="btn-ghost">See race categories</a>
+          </div>
+
+          <div className="countdown">
+            <span className="countdown-label">Flag-off in</span>
+            <div className="countdown-cells">
+              <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
+              <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
+              <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
+              <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section compact" id="categories">
+        <div className="section-inner">
+          <Reveal as="div" className="section-head-row">
+            <div>
+              <div className="eyebrow">Race categories</div>
+              <h2>Choose how you take part</h2>
+            </div>
+            <Link to="/categories" className="section-head-link">All categories →</Link>
+          </Reveal>
+          <div className="race-cards">
+            {RACE_FORMATS.map((d, i) => (
+              <Reveal as="div" key={d.categoryCode} delay={i * 70} className="race-card">
+                <div className="race-card-dist">{d.code}</div>
+                <div className="race-card-label">{d.label}</div>
+                <p className="race-card-detail">{d.detail}</p>
+                <div className="race-card-meta">
+                  <span className="race-card-fee">{feeFor(d.categoryCode) ? `K${feeFor(d.categoryCode)}` : ''}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section compact alt">
+        <div className="section-inner">
+          <Reveal as="div">
+            <div className="eyebrow">Why join?</div>
+            <h2>{EVENT.theme}</h2>
+          </Reveal>
+          <div className="why-grid">
+            {OBJECTIVES.map((o, i) => (
+              <Reveal as="div" key={o.title} delay={i * 60} className="why-card">
+                <div className="why-card-icon" aria-hidden="true">{o.icon}</div>
+                <h3>{o.title}</h3>
+                <p>{o.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section compact">
+        <div className="section-inner narrow">
+          <Reveal as="div">
+            <div className="eyebrow">Already registered?</div>
+            <h2>Track your registration</h2>
+          </Reveal>
+          <TrackRegistration />
+        </div>
+      </section>
+    </main>
+  );
+}
