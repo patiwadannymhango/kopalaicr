@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { EVENT, RACE_FORMATS, OBJECTIVES, DEFAULT_ENTRY_FEE } from '../data/event';
+import { EVENT, RACE_FORMATS,DEFAULT_ENTRY_FEE } from '../data/event';
 import { useCountdown } from '../hooks/useCountdown';
 import { fetchIndividualCategories } from '../api/individualApi';
 import { fetchRelayCategories } from '../api/teamApi';
