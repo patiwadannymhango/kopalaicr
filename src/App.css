@@ -72,7 +72,7 @@ main {
 }
 
 .brand-title-lg {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -0.01em;
@@ -117,10 +117,10 @@ main {
 }
 
 .section-inner, .site-header-inner, .site-footer-inner {
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 32px;
+  padding-right: 32px;
 }
 
 .section-inner.narrow, .form-inner {
@@ -128,7 +128,7 @@ main {
 }
 
 .section {
-  padding: 64px 0;
+  padding: 72px 0;
   border-bottom: 1px solid var(--line);
 }
 
@@ -141,7 +141,7 @@ main {
 }
 
 .section h2 {
-  font-size: 24px;
+  font-size: 28px;
   margin: 0 0 12px;
 }
 
@@ -174,9 +174,9 @@ main {
 }
 
 .page-hero {
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 56px 24px 40px;
+  padding: 56px 32px 40px;
 }
 
 .page-hero.narrow-hero {
@@ -184,7 +184,7 @@ main {
 }
 
 .page-hero h1 {
-  font-size: 34px;
+  font-size: 40px;
   margin: 8px 0 12px;
 }
 
@@ -641,7 +641,7 @@ textarea {
   position: relative;
   background: var(--void);
   border-bottom: 1px solid var(--line);
-  padding: 96px 24px 64px;
+  padding: 104px 32px 72px;
   overflow: hidden;
 }
 
@@ -658,8 +658,20 @@ textarea {
 .hero-inner {
   position: relative;
   z-index: 1;
-  max-width: 640px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: center;
+  gap: 56px;
+}
+
+.hero-side {
+  display: flex;
+  justify-content: center;
 }
 
 .eyebrow {
@@ -671,16 +683,16 @@ textarea {
 }
 
 .eyebrow-lg {
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.14em;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .hero h1 {
-  font-size: clamp(30px, 5vw, 48px);
+  font-size: clamp(34px, 4.2vw, 58px);
   margin: 14px 0 14px;
   letter-spacing: -0.01em;
-  max-width: 560px;
+  max-width: 620px;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -694,9 +706,20 @@ textarea {
 
 .hero-lede {
   color: var(--ink);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 500;
+  max-width: 620px;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero-side {
+    justify-content: flex-start;
+  }
 }
 
 .hero-cta {
@@ -762,28 +785,30 @@ textarea {
 }
 
 .hero-distance-pill-fee {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--gold);
 }
 
 .countdown {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px 20px;
-  flex-wrap: wrap;
+  border-radius: 16px;
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
 }
 
 .countdown-label {
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .countdown-cells {
@@ -792,25 +817,34 @@ textarea {
 }
 
 .countdown-cells .cell {
+  flex: 1;
   background: var(--cream);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: 10px;
+  padding: 12px 8px;
   text-align: center;
   min-width: 52px;
 }
 
 .countdown-cells .num {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--copper);
   font-variant-numeric: tabular-nums;
 }
 
 .countdown-cells .lbl {
-  font-size: 9px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted-2);
+}
+
+.countdown-foot {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
 }
 
 .race-cards {
@@ -864,7 +898,8 @@ textarea {
 }
 
 .race-card-fee {
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 16px;
   color: var(--ink);
 }
 
@@ -908,11 +943,12 @@ textarea {
 }
 
 .category-card-head h2 {
-  font-size: 19px;
+  font-size: 21px;
 }
 
 .category-card .race-row-fee {
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .tag-list {
@@ -949,13 +985,15 @@ textarea {
 }
 
 .fee-preview strong {
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--copper);
 }
 
 .fee-highlight {
   color: var(--copper);
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 800;
 }
 
 .race-table {
@@ -994,7 +1032,8 @@ textarea {
 
 .race-row-fee {
   text-align: right;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 16px;
   color: var(--copper);
 }
 
