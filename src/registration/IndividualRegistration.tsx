@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { IndividualDetails, MobileMoneyProvider, PaymentInfo, RegistrationRecord } from '../types';
 import { RACE_CATEGORIES, INDIVIDUAL_DIVISIONS } from '../types';
+import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchIndividualCategories, submitIndividualRegistration } from '../api/individualApi';
 import type { BackendCategory } from '../api/individualApi';
 import { initiatePayment } from '../api/paymentApi';
@@ -79,7 +80,8 @@ export default function IndividualRegistration() {
   }, []);
 
   const selectedCategory = categories?.find((c) => c.code === details.raceCategory);
-  const fee = selectedCategory ? Number(selectedCategory.price) || null : null;
+  const selectedCategoryLabel = selectedCategory?.name ?? RACE_CATEGORIES.find((c) => c.value === details.raceCategory)?.label ?? '';
+  const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
 
   function update<K extends keyof IndividualDetails>(key: K, value: IndividualDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
@@ -90,8 +92,8 @@ export default function IndividualRegistration() {
       setError('Please fill in name, email, phone and race category.');
       return;
     }
-    if (details.raceCategory === '10km-individual' && !details.division) {
-      setError('Please choose a division for the 10KM Individual Race.');
+    if ((details.raceCategory === '10km-individual' || details.raceCategory === '21km-individual') && !details.division) {
+      setError('Please choose a division for your race.');
       return;
     }
     if (!details.emergencyContactPhone) {
@@ -293,7 +295,7 @@ export default function IndividualRegistration() {
                 ))}
               </select>
             </Field>
-            {details.raceCategory === '10km-individual' && (
+            {(details.raceCategory === '10km-individual' || details.raceCategory === '21km-individual') && (
               <Field label="Division" required>
                 <select value={details.division} onChange={(e) => update('division', e.target.value as IndividualDetails['division'])}>
                   <option value="">Select division</option>
@@ -305,13 +307,13 @@ export default function IndividualRegistration() {
             )}
           </div>
 
-          {selectedCategory && (
+          {details.raceCategory && (
             <div className="fee-preview">
-              <span>Entry fee for {selectedCategory.name}</span>
+              <span>Entry fee for {selectedCategoryLabel}</span>
               {categories === null ? (
                 <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
               ) : (
-                <strong>{fee ? `K${fee}` : ''}</strong>
+                <strong>{`K${fee}`}</strong>
               )}
             </div>
           )}
@@ -349,11 +351,11 @@ export default function IndividualRegistration() {
         <>
           <div className="summary-row">
             <span>Race</span>
-            <strong>{selectedCategory?.name ?? '—'}</strong>
+            <strong>{selectedCategoryLabel || '—'}</strong>
           </div>
           <div className="summary-row">
             <span>Entry fee</span>
-            <strong className="fee-highlight">{fee ? `K${fee.toFixed(2)}` : ''}</strong>
+            <strong className="fee-highlight">{`K${(fee ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
           </div>
 
           <PaymentMethodPicker payment={payment} onChange={(patch) => setPayment((p) => ({ ...p, ...patch }))} />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RELAY_CATEGORIES, INDIVIDUAL_DIVISIONS, RELAY_TEAM_SIZE } from '../types';
-import { INCLUSIONS } from '../data/event';
+import { INCLUSIONS, DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchIndividualCategories } from '../api/individualApi';
 import { fetchRelayCategories } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
@@ -19,16 +19,18 @@ export default function Categories() {
 
   const loading = !individualCategories || !relayCategories;
 
-  function feeFor(source: BackendCategory[] | null, code: string): number | null {
+  function feeFor(source: BackendCategory[] | null, code: string): number {
     const category = source?.find((c) => c.code === code);
-    if (!category) return null;
-    const price = Number(category.price);
-    return price > 0 ? price : null;
+    const price = category ? Number(category.price) : NaN;
+    return price > 0 ? price : DEFAULT_ENTRY_FEE;
   }
 
   const relayFee = feeFor(relayCategories, 'relay');
   const individualFee = feeFor(individualCategories, '10km-individual');
-  const funRunFee = feeFor(individualCategories, '5km-fun-run');
+  const halfMarathonFee = feeFor(individualCategories, '21km-individual');
+  const ceoRaceFee = feeFor(individualCategories, '100m-ceo');
+  const directorsRaceFee = feeFor(individualCategories, '100m-directors');
+  const kidsFee = feeFor(individualCategories, 'kids-athletics');
 
   return (
     <main>
@@ -36,7 +38,8 @@ export default function Categories() {
         <div className="eyebrow">Race categories</div>
         <h1>Pick how you take part</h1>
         <p className="lede">
-          Field a company team, race solo over 10KM, or bring everyone along for the 5KM Fun Race &amp; Walk.
+          Field a company team, race solo over 10KM or 21KM, take on a 100m CEO or Directors sprint, or bring
+          the kids along for Kids Athletics.
         </p>
       </section>
 
@@ -49,7 +52,7 @@ export default function Categories() {
               <div className="category-card">
                 <div className="category-card-head">
                   <h2>10KM Corporate Relay</h2>
-                  <span className="race-row-fee">{relayFee ? `K${relayFee}` : ''}</span>
+                  <span className="race-row-fee">{`K${relayFee}`}</span>
                 </div>
                 <p>
                   Companies and institutions field teams of {RELAY_TEAM_SIZE} runners who share the baton
@@ -65,7 +68,7 @@ export default function Categories() {
               <div className="category-card">
                 <div className="category-card-head">
                   <h2>10KM Individual Race</h2>
-                  <span className="race-row-fee">{individualFee ? `K${individualFee}` : ''}</span>
+                  <span className="race-row-fee">{`K${individualFee}`}</span>
                 </div>
                 <p>Race the 10KM course solo — for competitive and recreational runners alike.</p>
                 <ul className="tag-list">
@@ -77,13 +80,39 @@ export default function Categories() {
 
               <div className="category-card">
                 <div className="category-card-head">
-                  <h2>5KM Fun Race &amp; Walk</h2>
-                  <span className="race-row-fee">{funRunFee ? `K${funRunFee}` : ''}</span>
+                  <h2>21KM Individual Race &amp; Walk</h2>
+                  <span className="race-row-fee">{`K${halfMarathonFee}`}</span>
                 </div>
-                <p>
-                  Walk it, jog it, or run it. Open to families, friends, corporate employees, students and
-                  the wider community — promoting healthy living for everyone.
-                </p>
+                <p>Take on the half-marathon distance — race it competitively or walk it at your own pace.</p>
+                <ul className="tag-list">
+                  {INDIVIDUAL_DIVISIONS.map((d) => (
+                    <li key={d.value}>{d.label}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="category-card">
+                <div className="category-card-head">
+                  <h2>100m CEO Race</h2>
+                  <span className="race-row-fee">{`K${ceoRaceFee}`}</span>
+                </div>
+                <p>A fast, fun sprint reserved for company chief executives — bragging rights on the line.</p>
+              </div>
+
+              <div className="category-card">
+                <div className="category-card-head">
+                  <h2>100m Directors Race</h2>
+                  <span className="race-row-fee">{`K${directorsRaceFee}`}</span>
+                </div>
+                <p>A fast, fun sprint for company directors and senior leadership.</p>
+              </div>
+
+              <div className="category-card">
+                <div className="category-card-head">
+                  <h2>Kids Athletics</h2>
+                  <span className="race-row-fee">{`K${kidsFee}`}</span>
+                </div>
+                <p>Fun athletics activities for children — open to families joining us on race day.</p>
               </div>
             </Reveal>
           )}

@@ -747,6 +747,7 @@ textarea {
   padding: 8px 14px;
   font-size: 12px;
   color: var(--ink-soft);
+  text-decoration: none;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 

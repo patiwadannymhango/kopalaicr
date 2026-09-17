@@ -15,8 +15,8 @@ export default function Register() {
         <div className="eyebrow">Register for {EVENT.shortTitle}</div>
         <h1>Secure your place</h1>
         <p className="lede">
-          Field a company relay team, or register as an individual for the 10KM race or the 5KM Fun Race
-          &amp; Walk.
+          Field a company relay team, or register as an individual for the 10KM race, the 21KM race &amp;
+          walk, the 100m CEO or Directors race, or Kids Athletics.
         </p>
       </section>
 

@@ -33,12 +33,36 @@ export const RACE_FORMATS = [
     detail: "Men's Open, Women's Open, Corporate, Masters",
   },
   {
-    code: '5KM',
-    categoryCode: '5km-fun-run',
-    label: 'Fun Race & Walk',
-    detail: 'Walk it, jog it, or run it — everyone welcome',
+    code: '21KM',
+    categoryCode: '21km-individual',
+    label: 'Individual Race & Walk',
+    detail: 'Race it or walk it — same divisions as the 10KM',
+  },
+  {
+    code: '100M',
+    categoryCode: '100m-ceo',
+    label: 'CEO Race',
+    detail: 'A fun sprint reserved for company chief executives',
+  },
+  {
+    code: '100M',
+    categoryCode: '100m-directors',
+    label: 'Directors Race',
+    detail: 'A fun sprint for company directors and senior leadership',
+  },
+  {
+    code: 'KIDS',
+    categoryCode: 'kids-athletics',
+    label: 'Kids Athletics',
+    detail: 'Fun athletics activities for children on race day',
   },
 ];
+
+/** Flat placeholder entry fee (in Kwacha) shown across the site until the
+ * backend is live and returns real per-category pricing. Every fee display
+ * falls back to this value whenever the fetched category is missing or has
+ * no price — remove the fallback once real pricing is wired up. */
+export const DEFAULT_ENTRY_FEE = 2;
 
 export const OBJECTIVES = [
   { icon: '🤝', title: 'Corporate Partnerships', desc: 'Bringing companies and institutions together across every sector of the economy.' },

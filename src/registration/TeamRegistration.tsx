@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, RunnerRosterEntry, TeamDetails } from '../types';
 import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
+import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
 import { initiatePayment } from '../api/paymentApi';
@@ -75,7 +76,7 @@ export default function TeamRegistration() {
   // comes from the one 'relay' category — matching how Home and
   // Categories look it up.
   const selectedCategory = categories?.find((c) => c.code === 'relay');
-  const fee = selectedCategory ? Number(selectedCategory.price) || null : null;
+  const fee = details.relayCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
@@ -274,7 +275,7 @@ export default function TeamRegistration() {
               {categories === null ? (
                 <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
               ) : (
-                <strong>{fee ? `K${fee}` : ''}</strong>
+                <strong>{`K${fee}`}</strong>
               )}
             </div>
           )}
@@ -353,7 +354,7 @@ export default function TeamRegistration() {
           </div>
           <div className="summary-row">
             <span>Entry fee — full team</span>
-            <strong className="fee-highlight">{fee ? `K${fee.toFixed(2)}` : ''}</strong>
+            <strong className="fee-highlight">{`K${(fee ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
           </div>
 
           <PaymentMethodPicker payment={payment} onChange={(patch) => setPayment((p) => ({ ...p, ...patch }))} />

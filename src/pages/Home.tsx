@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { EVENT, RACE_FORMATS, OBJECTIVES } from '../data/event';
+import { EVENT, RACE_FORMATS, OBJECTIVES, DEFAULT_ENTRY_FEE } from '../data/event';
 import { useCountdown } from '../hooks/useCountdown';
 import { fetchIndividualCategories } from '../api/individualApi';
 import { fetchRelayCategories } from '../api/teamApi';
@@ -19,12 +19,11 @@ export default function Home() {
     fetchRelayCategories().then(setRelayCategories).catch(() => setRelayCategories([]));
   }, []);
 
-  function feeFor(code: string): number | null {
+  function feeFor(code: string): number {
     const source = code === 'relay' ? relayCategories : individualCategories;
     const category = source?.find((c) => c.code === code);
-    if (!category) return null;
-    const price = Number(category.price);
-    return price > 0 ? price : null;
+    const price = category ? Number(category.price) : NaN;
+    return price > 0 ? price : DEFAULT_ENTRY_FEE;
   }
 
   return (
@@ -36,8 +35,9 @@ export default function Home() {
           <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
           <h1>{EVENT.motto}</h1>
           <p className="lede hero-lede">
-            {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt for a
-            10KM Corporate Relay, a 10KM Individual Race, or the 5KM Fun Race &amp; Walk.
+            {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
+            other provinces for a 10KM Corporate Relay, a 10KM Individual Race, a 21KM Individual Race &amp;
+            Walk, a 100m CEO Race, a 100m Directors Race, or Kids Athletics.
           </p>
 
           <div className="hero-facts">
@@ -50,12 +50,12 @@ export default function Home() {
             {RACE_FORMATS.map((d) => {
               const fee = feeFor(d.categoryCode);
               return (
-                <span key={d.categoryCode} className="hero-distance-pill">
+                <Link key={d.categoryCode} to="/categories" className="hero-distance-pill">
                   <span className="hero-distance-pill-main">
                     <strong>{d.code}</strong> {d.label}
                   </span>
-                  <span className="hero-distance-pill-fee">{fee ? `K${fee}` : ''}</span>
-                </span>
+                  <span className="hero-distance-pill-fee">{`K${fee}`}</span>
+                </Link>
               );
             })}
           </div>

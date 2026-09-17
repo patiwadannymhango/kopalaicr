@@ -20,8 +20,8 @@ export default function About() {
             <p className="lede">
               The {EVENT.shortTitle} is organised by {EVENT.organizer} under the theme "{EVENT.theme}" —{' '}
               {EVENT.tagline} Companies and institutions field 8-runner relay teams to race the baton over
-              10KM, individuals compete solo over 10KM or take on the 5KM Fun Race &amp; Walk with friends,
-              family and colleagues.
+              10KM, individuals compete solo over 10KM or 21KM, executives go head-to-head in the 100m CEO
+              and Directors races, and children join in with Kids Athletics.
             </p>
           </Reveal>
         </div>
@@ -33,7 +33,7 @@ export default function About() {
             <div><strong>Date</strong>{EVENT.date}</div>
             <div><strong>Venue</strong>{EVENT.venue}</div>
             <div><strong>Organiser</strong>{EVENT.organizer}</div>
-            <div><strong>Format</strong>10KM Corporate Relay (8-runner teams), 10KM Individual Race, and the 5KM Fun Race &amp; Walk</div>
+            <div><strong>Format</strong>10KM Corporate Relay (8-runner teams), 10KM &amp; 21KM Individual Races, 100m CEO &amp; Directors Races, and Kids Athletics</div>
           </Reveal>
         </div>
       </section>
@@ -58,7 +58,7 @@ export default function About() {
 
       <section className="cta-band">
         <h2>Ready to join?</h2>
-        <p>Enter a company team, race as an individual, or bring the family to the 5KM.</p>
+        <p>Enter a company team, race as an individual, take on a CEO or Directors sprint, or bring the kids along.</p>
         <Link to="/register" className="btn-cta-light">
           Register now
         </Link>
