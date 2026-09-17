@@ -4,12 +4,12 @@ export const EVENT = {
   motto: 'One Baton. One Team. One Goal.',
   theme: 'Celebrating Corporate Partnerships, Health and Wellness',
   tagline: 'By acting together, we can win.',
-  date: 'Saturday, 3 October 2026',
+  date: 'Saturday, 17 October 2026',
   // The date is confirmed; the 06:00 flag-off is a placeholder pending an
   // official start-list from Zambia Athletics — same convention used on
   // the sibling Independence Run sites: leave a sensible early-morning
   // default rather than inventing a precise time nobody has confirmed.
-  isoDate: '2026-10-03T06:00:00',
+  isoDate: '2026-10-17T06:00:00',
   venue: 'Nchanga Stadium, Chingola, Copperbelt Province',
   organizer: 'Zambia Athletics',
   // Published WhatsApp contact line from the live site — not invented.
