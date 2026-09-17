@@ -70,44 +70,6 @@ export interface TeamDetails {
   acceptedTerms: boolean;
 }
 
-/** Whether the team's base entry fee (which covers the first
- * RELAY_TEAM_SIZE runners) has been settled — shown on the team's
- * dashboard as an account-level badge, distinct from the pay/not-paid
- * state of any individual extra runner beyond that free allowance. */
-export type AccountStatus = 'paid' | 'unpaid';
-
-/** A runner as they appear on the logged-in team dashboard — unlike
- * RunnerRosterEntry (used while still filling in the registration form),
- * this one exists on the backend and knows whether it's inside the free
- * allowance or an extra paid seat. */
-export interface RosterRunner {
-  id: string;
-  fullName: string;
-  gender: Gender;
-  /** True for the first RELAY_TEAM_SIZE runners, covered by the team's
-   * entry fee. False for anyone added beyond that, who owes the extra
-   * per-runner fee. */
-  covered: boolean;
-  /** Always true when `covered`. For an extra runner, false until their
-   * overage fee payment succeeds. */
-  paid: boolean;
-}
-
-/** The logged-in team's account — fetched after login and shown on the
- * dashboard, where the captain can review their roster and add runners
- * beyond the free allowance (each one incurring the extra-runner fee). */
-export interface TeamAccount {
-  teamId: string;
-  teamName: string;
-  companyOrInstitution: string;
-  relayCategory: RelayCategory;
-  captainEmail: string;
-  reference: string | null;
-  accountStatus: AccountStatus;
-  freeRunnerLimit: number;
-  roster: RosterRunner[];
-}
-
 export interface PaymentInfo {
   method: PaymentMethod;
   provider?: MobileMoneyProvider;

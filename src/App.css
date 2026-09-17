@@ -1368,56 +1368,6 @@ textarea {
   .roster-remove { grid-area: remove; }
 }
 
-/* Read-only roster listing — team dashboard */
-.roster-table {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 4px 0 20px;
-}
-
-.roster-table-row {
-  display: grid;
-  grid-template-columns: 32px 1fr 90px 140px;
-  gap: 8px;
-  align-items: center;
-  padding: 10px 14px;
-  font-size: 13px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink-soft);
-}
-
-.roster-table-row:last-child {
-  border-bottom: none;
-}
-
-.roster-table-head {
-  background: var(--cream);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted-2);
-  font-weight: 600;
-}
-
-@media (max-width: 560px) {
-  .roster-table-row {
-    grid-template-columns: 24px 1fr 80px;
-  }
-  .roster-table-row span:nth-child(3) {
-    display: none;
-  }
-  .roster-table-head span:nth-child(3) {
-    display: none;
-  }
-}
-
-/* Centered helper text under a form — Login page */
-.auth-note {
-  text-align: center;
-  margin-top: 16px;
-}
-
 .center-text {
   text-align: center;
 }

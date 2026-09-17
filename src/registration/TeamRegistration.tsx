@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, RunnerRosterEntry, TeamDetails } from '../types';
 import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
@@ -38,8 +37,6 @@ type Step = 'details' | 'payment' | 'processing' | 'done';
 export default function TeamRegistration() {
   const [categories, setCategories] = useState<BackendCategory[] | null>(null);
   const [details, setDetails] = useState<TeamDetails>(initialDetails);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [payment, setPayment] = useState<PaymentInfo>(initialPayment);
   const [step, setStep] = useState<Step>('details');
   const [error, setError] = useState('');
@@ -113,14 +110,6 @@ export default function TeamRegistration() {
       setError('Please fill in the team name, company, category and captain details.');
       return;
     }
-    if (password.length < 8) {
-      setError('Please choose a password of at least 8 characters for your team account.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
     if (!details.acceptedTerms) {
       setError('Please accept the event terms and indemnity to continue.');
       return;
@@ -150,7 +139,7 @@ export default function TeamRegistration() {
 
     setSubmitting(true);
     try {
-      const registration = await submitTeamRegistration(details, password);
+      const registration = await submitTeamRegistration(details);
 
       if (payment.method === 'bank-transfer') {
         setRecord({
@@ -226,8 +215,6 @@ export default function TeamRegistration() {
 
   function handleStartOver() {
     setDetails(initialDetails);
-    setPassword('');
-    setConfirmPassword('');
     setPayment(initialPayment);
     setStep('details');
     setRecord(null);
@@ -307,41 +294,16 @@ export default function TeamRegistration() {
             </Field>
           </div>
 
-          <p className="hint">
-            Set a password to create your team's login — sign in anytime at <Link to="/login">/login</Link> with
-            your captain email to manage your roster and check your account status.
-          </p>
-          <div className="grid-2">
-            <Field label="Password" required>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 8 characters"
-                autoComplete="new-password"
-              />
-            </Field>
-            <Field label="Confirm password" required>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-            </Field>
-          </div>
-
           <div className="roster">
             <div className="roster-head">
               <span className="field-label">
                 Runner roster <span className="optional">optional — add now or later</span>
               </span>
-              <span className="roster-count">{details.roster.length} of {RELAY_TEAM_SIZE} included free</span>
+              <span className="roster-count">{details.roster.length} of {RELAY_TEAM_SIZE} included</span>
             </div>
             <p className="hint">
-              The first {RELAY_TEAM_SIZE} runners are covered by your entry fee. Need a bigger squad? Add extra
-              runners anytime from your team dashboard after logging in — each one beyond {RELAY_TEAM_SIZE} incurs
-              a small additional fee.
+              One entry fee covers up to {RELAY_TEAM_SIZE} runners. Add them now if you know your full squad, or
+              leave this for later and send the names through to the organisers before race day.
             </p>
 
             {details.roster.map((runner, i) => (
@@ -450,16 +412,8 @@ export default function TeamRegistration() {
             </div>
           )}
 
-          <p className="hint">
-            Your team's login is ready — sign in anytime with {details.captainEmail} to manage your roster and
-            add runners beyond the first {RELAY_TEAM_SIZE}.
-          </p>
-
           <div className="actions actions-stack">
-            <Link className="btn-primary btn-full" to="/dashboard">
-              Go to team dashboard
-            </Link>
-            <button className="btn-ghost btn-full" onClick={handleDownload} disabled={downloading}>
+            <button className="btn-primary btn-full" onClick={handleDownload} disabled={downloading}>
               {downloading ? (
                 <span className="btn-loading">
                   <Spinner size={14} /> Preparing receipt…

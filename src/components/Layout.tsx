@@ -1,16 +1,7 @@
-import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, Link } from 'react-router-dom';
 import { EVENT } from '../data/event';
-import { useAuth } from '../context/AuthContext';
 
 export default function Layout() {
-  const { isLoggedIn, team, logout } = useAuth();
-  const navigate = useNavigate();
-
-  function handleLogout() {
-    logout();
-    navigate('/');
-  }
-
   return (
     <div className="site">
       <header className="site-header">
@@ -24,17 +15,7 @@ export default function Layout() {
             <NavLink to="/about">About</NavLink>
             <NavLink to="/categories">Categories</NavLink>
             <NavLink to="/sponsors">Sponsors</NavLink>
-            {isLoggedIn && <NavLink to="/dashboard">{team?.teamName ?? 'My team'}</NavLink>}
           </nav>
-          {isLoggedIn ? (
-            <button type="button" className="btn-ghost btn-sm" onClick={handleLogout}>
-              Log out
-            </button>
-          ) : (
-            <Link to="/login" className="btn-ghost btn-sm">
-              Team login
-            </Link>
-          )}
           <Link to="/register" className="btn-primary btn-sm">
             Register
           </Link>
