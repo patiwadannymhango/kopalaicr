@@ -79,7 +79,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section compact" id="categories">
+      {/* <section className="section compact" id="categories">
         <div className="section-inner">
           <Reveal as="div" className="section-head-row">
             <div>
@@ -101,9 +101,9 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className="section compact alt">
+      {/* <section className="section compact alt">
         <div className="section-inner">
           <Reveal as="div">
             <div className="eyebrow">Why join?</div>
@@ -119,7 +119,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="section compact">
         <div className="section-inner narrow">
