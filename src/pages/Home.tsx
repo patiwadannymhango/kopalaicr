@@ -37,8 +37,8 @@ export default function Home() {
             <h1>{EVENT.motto}</h1>
             <p className="lede hero-lede">
               {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
-              other provinces for a 10KM Corporate Relay, a 10KM Individual Race, a 21KM Individual Race &amp;
-              Walk, a 100m CEO Race, a 100m Directors Race, or Kids Athletics.
+              other provinces for a 10KM Corporate Relay, 10KM Individual Race, 21KM Individual Race, 5KM Individual Race & Walk,  &amp;
+              Walk, 100m CEO Race, 100m Directors Race, or Kids Athletics.
             </p>
 
             <div className="hero-distances">
