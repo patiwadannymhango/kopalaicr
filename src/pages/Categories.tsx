@@ -26,6 +26,7 @@ export default function Categories() {
   }
 
   const relayFee = feeFor(relayCategories, 'relay');
+  const fiveKmFee = feeFor(individualCategories, '5km-individual');
   const individualFee = feeFor(individualCategories, '10km-individual');
   const halfMarathonFee = feeFor(individualCategories, '21km-individual');
   const ceoRaceFee = feeFor(individualCategories, '100m-ceo');
@@ -38,8 +39,8 @@ export default function Categories() {
         <div className="eyebrow">Race categories</div>
         <h1>Pick how you take part</h1>
         <p className="lede">
-          Field a company team, race solo over 10KM or 21KM, take on a 100m CEO or Directors sprint, or bring
-          the kids along for Kids Athletics.
+          Field a company team, race solo over 5KM, 10KM or 21KM, take on a 100m CEO or Directors sprint, or
+          bring the kids along for Kids Athletics.
         </p>
       </section>
 
@@ -61,6 +62,19 @@ export default function Categories() {
                 <ul className="tag-list">
                   {RELAY_CATEGORIES.map((c) => (
                     <li key={c.value}>{c.label}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="category-card">
+                <div className="category-card-head">
+                  <h2>5KM Individual Race &amp; Walk</h2>
+                  <span className="race-row-fee">{`K${fiveKmFee}`}</span>
+                </div>
+                <p>Race it or walk it over 5KM — an easier distance for first-timers and casual runners.</p>
+                <ul className="tag-list">
+                  {INDIVIDUAL_DIVISIONS.map((d) => (
+                    <li key={d.value}>{d.label}</li>
                   ))}
                 </ul>
               </div>

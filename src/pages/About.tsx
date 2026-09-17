@@ -20,8 +20,8 @@ export default function About() {
             <p className="lede">
               The {EVENT.shortTitle} is organised by {EVENT.organizer} under the theme "{EVENT.theme}" —{' '}
               {EVENT.tagline} Companies and institutions field 8-runner relay teams to race the baton over
-              10KM, individuals compete solo over 10KM or 21KM, executives go head-to-head in the 100m CEO
-              and Directors races, and children join in with Kids Athletics.
+              10KM, individuals compete solo over 5KM, 10KM or 21KM, executives go head-to-head in the 100m
+              CEO and Directors races, and children join in with Kids Athletics.
             </p>
           </Reveal>
         </div>
@@ -33,7 +33,7 @@ export default function About() {
             <div><strong>Date</strong>{EVENT.date}</div>
             <div><strong>Venue</strong>{EVENT.venue}</div>
             <div><strong>Organiser</strong>{EVENT.organizer}</div>
-            <div><strong>Format</strong>10KM Corporate Relay (8-runner teams), 10KM &amp; 21KM Individual Races, 100m CEO &amp; Directors Races, and Kids Athletics</div>
+            <div><strong>Format</strong>10KM Corporate Relay (8-runner teams), 5KM, 10KM &amp; 21KM Individual Races, 100m CEO &amp; Directors Races, and Kids Athletics</div>
           </Reveal>
         </div>
       </section>

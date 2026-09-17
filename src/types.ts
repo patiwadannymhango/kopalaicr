@@ -1,5 +1,6 @@
 export type RaceCategory =
   | ''
+  | '5km-individual'
   | '10km-individual'
   | '21km-individual'
   | '100m-ceo'
@@ -7,6 +8,7 @@ export type RaceCategory =
   | 'kids-athletics';
 
 export const RACE_CATEGORIES: { value: RaceCategory; label: string; distance: string }[] = [
+  { value: '5km-individual', label: '5KM Individual Race & Walk', distance: '5 KM' },
   { value: '10km-individual', label: '10KM Individual Race', distance: '10 KM' },
   { value: '21km-individual', label: '21KM Individual Race & Walk', distance: '21 KM' },
   { value: '100m-ceo', label: '100m CEO Race', distance: '100 M' },
@@ -16,9 +18,9 @@ export const RACE_CATEGORIES: { value: RaceCategory; label: string; distance: st
 
 export type IndividualDivision = '' | 'mens-open' | 'womens-open' | 'corporate' | 'masters';
 
-/** Only meaningful for the 10KM and 21KM Individual races — the 100m CEO
- * and Directors races and Kids Athletics have no divisions, they're open
- * to whoever's eligible for that race. */
+/** Only meaningful for the 5KM, 10KM and 21KM Individual races — the 100m
+ * CEO and Directors races and Kids Athletics have no divisions, they're
+ * open to whoever's eligible for that race. */
 export const INDIVIDUAL_DIVISIONS: { value: IndividualDivision; label: string }[] = [
   { value: 'mens-open', label: "Men's Open" },
   { value: 'womens-open', label: "Women's Open" },

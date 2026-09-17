@@ -11,6 +11,11 @@ import PaymentMethodPicker from '../components/PaymentMethodPicker';
 import ProcessingPanel from '../components/ProcessingPanel';
 import Spinner from '../components/Spinner';
 import { downloadReceipt } from '../utils/receipt';
+import type { RaceCategory } from '../types';
+
+/** Races with divisions (Men's Open, Women's Open, Corporate, Masters) —
+ * the 100m CEO/Directors races and Kids Athletics have none. */
+const DIVISION_RACE_CATEGORIES: RaceCategory[] = ['5km-individual', '10km-individual', '21km-individual'];
 
 const initialDetails: IndividualDetails = {
   fullName: '',
@@ -92,7 +97,7 @@ export default function IndividualRegistration() {
       setError('Please fill in name, email, phone and race category.');
       return;
     }
-    if ((details.raceCategory === '10km-individual' || details.raceCategory === '21km-individual') && !details.division) {
+    if (DIVISION_RACE_CATEGORIES.includes(details.raceCategory) && !details.division) {
       setError('Please choose a division for your race.');
       return;
     }
@@ -295,7 +300,7 @@ export default function IndividualRegistration() {
                 ))}
               </select>
             </Field>
-            {(details.raceCategory === '10km-individual' || details.raceCategory === '21km-individual') && (
+            {DIVISION_RACE_CATEGORIES.includes(details.raceCategory) && (
               <Field label="Division" required>
                 <select value={details.division} onChange={(e) => update('division', e.target.value as IndividualDetails['division'])}>
                   <option value="">Select division</option>

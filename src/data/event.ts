@@ -27,6 +27,12 @@ export const RACE_FORMATS = [
     detail: "8-runner teams · Men's, Women's & Mixed",
   },
   {
+    code: '5KM',
+    categoryCode: '5km-individual',
+    label: 'Individual Race & Walk',
+    detail: 'Race it or walk it — same divisions as the 10KM & 21KM',
+  },
+  {
     code: '10KM',
     categoryCode: '10km-individual',
     label: 'Individual Race',
