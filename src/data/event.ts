@@ -108,7 +108,9 @@ export const SPONSOR_TIERS = [
  * above (which are still-unconfirmed paid sponsorship slots). Logo files
  * live in public/logos/, pre-trimmed and compressed. */
 export const PARTNER_LOGOS = [
-  { name: 'Konkola Copper Mines Plc', file: '/logos/kcm.png' },
+  // lightBg: its brown/navy wordmark is too low-contrast on the site's
+  // dark cards, so it gets a white chip instead of the usual dark one.
+  { name: 'Konkola Copper Mines Plc', file: '/logos/kcm.png', lightBg: true },
   { name: 'Zambia Athletics', file: '/logos/za.png' },
   { name: 'Ministry of Youth, Sport & Arts', file: '/logos/mysa.png' },
   { name: 'National Sports Council of Zambia', file: '/logos/nscz.png' },

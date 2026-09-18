@@ -1189,6 +1189,13 @@ textarea {
   object-fit: contain;
 }
 
+/* A couple of partner logos (see PARTNER_LOGOS' lightBg flag) are too
+   low-contrast on the site's dark cards — give those a white chip instead. */
+.partner-logo-card.light-bg {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 480px) {
   .partner-logo-card {
     width: 140px;
