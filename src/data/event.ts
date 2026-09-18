@@ -104,6 +104,18 @@ export const SPONSOR_TIERS = [
   { name: 'Hydration Partner', tier: 'Wellness partner' },
 ];
 
+/** Confirmed official partners/organisers — distinct from SPONSOR_TIERS
+ * above (which are still-unconfirmed paid sponsorship slots). Logo files
+ * live in public/logos/, pre-trimmed and compressed. */
+export const PARTNER_LOGOS = [
+  { name: 'Konkola Copper Mines Plc', file: '/logos/kcm.png' },
+  { name: 'Zambia Athletics', file: '/logos/za.png' },
+  { name: 'Ministry of Youth, Sport & Arts', file: '/logos/mysa.png' },
+  { name: 'National Sports Council of Zambia', file: '/logos/nscz.png' },
+  { name: 'FIT Sports Drink', file: '/logos/fit.png' },
+  { name: 'Vatra Mineral Water', file: '/logos/vatra.png' },
+];
+
 /** Left blank until the organisers confirm official banking details — the
  * bank transfer step on the Register page shows "coming soon" while
  * these are empty rather than displaying a placeholder account number. */

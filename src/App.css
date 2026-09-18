@@ -1158,6 +1158,124 @@ textarea {
   }
 }
 
+.partner-logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.partner-logo-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  width: 168px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.partner-logo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.partner-logo-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 480px) {
+  .partner-logo-card {
+    width: 140px;
+    height: 80px;
+    padding: 12px;
+  }
+}
+
+/* Slim sitewide strip directly under the header (see Layout.tsx) — same
+   cards, smaller, tighter spacing so it doesn't compete with page content. */
+.partner-strip {
+  border-bottom: 1px solid var(--line);
+  background: var(--cream);
+  padding: 14px 0;
+}
+
+.partner-logo-grid.compact {
+  gap: 10px;
+  /* Starts flush under the brand title in the header above, rather than
+     centered across the page like the fuller Sponsors-page version. */
+  justify-content: flex-start;
+}
+
+.partner-logo-grid.compact .partner-logo-card {
+  width: 108px;
+  height: 56px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  .partner-logo-grid.compact .partner-logo-card {
+    width: 88px;
+    height: 46px;
+    padding: 6px;
+  }
+}
+
+/* Floating glowing WhatsApp button — fixed on every page, see
+   components/WhatsAppButton.tsx. */
+@keyframes whatsapp-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35); }
+  50% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0), 0 4px 14px rgba(0, 0, 0, 0.35); }
+}
+
+@keyframes whatsapp-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+.whatsapp-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 50;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: whatsapp-glow 2.4s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-fab:hover {
+  transform: scale(1.08);
+}
+
+.whatsapp-fab-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25d366;
+  animation: whatsapp-ring 2.4s ease-out infinite;
+}
+
+@media (max-width: 480px) {
+  .whatsapp-fab {
+    right: 14px;
+    bottom: 14px;
+    width: 52px;
+    height: 52px;
+  }
+}
+
 .quick-facts {
   display: grid;
   grid-template-columns: 1fr 1fr;

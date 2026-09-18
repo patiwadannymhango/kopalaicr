@@ -1,5 +1,7 @@
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import { EVENT } from '../data/event';
+import PartnerLogos from './PartnerLogos';
+import WhatsAppButton from './WhatsAppButton';
 
 export default function Layout() {
   return (
@@ -22,6 +24,12 @@ export default function Layout() {
           </Link>
         </div>
       </header>
+
+      <div className="partner-strip">
+        <div className="section-inner">
+          <PartnerLogos compact />
+        </div>
+      </div>
 
       <Outlet />
 
@@ -71,6 +79,8 @@ export default function Layout() {
           </p>
         </div>
       </footer>
+
+      <WhatsAppButton />
     </div>
   );
 }

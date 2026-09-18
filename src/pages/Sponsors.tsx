@@ -1,5 +1,6 @@
 import { SPONSOR_TIERS, EVENT } from '../data/event';
 import Reveal from '../components/Reveal';
+import PartnerLogos from '../components/PartnerLogos';
 
 export default function Sponsors() {
   return (
@@ -15,6 +16,24 @@ export default function Sponsors() {
 
       <section className="section">
         <div className="section-inner">
+          <Reveal as="div" className="section-head-row">
+            <div>
+              <div className="eyebrow">Confirmed</div>
+              <h2>Official partners</h2>
+            </div>
+          </Reveal>
+          <PartnerLogos />
+        </div>
+      </section>
+
+      <section className="section alt">
+        <div className="section-inner">
+          <Reveal as="div" className="section-head-row">
+            <div>
+              <div className="eyebrow">Open tiers</div>
+              <h2>Sponsorship packages</h2>
+            </div>
+          </Reveal>
           <div className="sponsor-grid">
             {SPONSOR_TIERS.map((s, i) => (
               <Reveal as="div" key={s.name} delay={i * 60} className="sponsor-card tier-card">
