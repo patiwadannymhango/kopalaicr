@@ -15,6 +15,7 @@ export default function Layout() {
             <NavLink to="/about">About</NavLink>
             <NavLink to="/categories">Categories</NavLink>
             <NavLink to="/sponsors">Sponsors</NavLink>
+            <NavLink to="/vendors">Vendors</NavLink>
           </nav>
           <Link to="/register" className="btn-primary btn-sm">
             Register
@@ -44,6 +45,7 @@ export default function Layout() {
                 <span className="footer-label">Register</span>
                 <Link to="/register">Team / relay entry</Link>
                 <Link to="/register">Individual entry</Link>
+                <Link to="/vendors">Vendor &amp; exhibitor entry</Link>
                 <a href="/register#track">Track registration</a>
               </div>
               <div>

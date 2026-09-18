@@ -6,6 +6,7 @@ import About from './pages/About';
 import Categories from './pages/Categories';
 import Sponsors from './pages/Sponsors';
 import Register from './pages/Register';
+import Vendors from './pages/Vendors';
 import SplashLoader from './components/SplashLoader';
 import './App.css';
 
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/sponsors" element={<Sponsors />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/vendors" element={<Vendors />} />
         </Route>
       </Routes>
     </BrowserRouter>

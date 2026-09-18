@@ -1,4 +1,4 @@
-import type { IndividualDetails, RegistrationRecord, TeamDetails } from '../types';
+import type { IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
 import { RACE_CATEGORIES, INDIVIDUAL_DIVISIONS, RELAY_CATEGORIES } from '../types';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -19,17 +19,25 @@ export function displayName(record: RegistrationRecord): string {
     const d = record.details as TeamDetails;
     return `${d.teamName} — ${d.captainFirstName} ${d.captainLastName} (captain)`.trim();
   }
+  if (record.entryType === 'vendor') {
+    const d = record.details as VendorDetails;
+    return `${d.businessName} — ${d.contactPerson}`.trim();
+  }
   const d = record.details as IndividualDetails;
   return d.fullName;
 }
 
-/** The race/category label to show for a registration, covering both the
- * individual race categories and the relay team categories. */
+/** The category label to show for a registration, covering the individual
+ * race categories, the relay team categories, and vendor categories. */
 export function categoryLabel(record: RegistrationRecord): string {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
     const category = RELAY_CATEGORIES.find((c) => c.value === d.relayCategory);
     return category ? `10KM Corporate Relay — ${category.label}` : '10KM Corporate Relay';
+  }
+  if (record.entryType === 'vendor') {
+    const d = record.details as VendorDetails;
+    return d.categoryName || d.category;
   }
   const d = record.details as IndividualDetails;
   const category = RACE_CATEGORIES.find((c) => c.value === d.raceCategory);

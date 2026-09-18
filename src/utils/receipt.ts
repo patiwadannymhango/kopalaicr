@@ -1,5 +1,5 @@
 import { EVENT } from '../data/event';
-import type { IndividualDetails, RegistrationRecord, TeamDetails } from '../types';
+import type { IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
 import { categoryLabel, statusLabel } from './registrationDisplay';
 
 const COPPER: [number, number, number] = [217, 119, 47];
@@ -35,8 +35,15 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     if (value && value.trim()) rows.push([label, value]);
   };
 
+  const entryTypeLabel =
+    record.entryType === 'team'
+      ? '10KM Corporate Relay (team)'
+      : record.entryType === 'vendor'
+        ? 'Vendor / exhibitor entry'
+        : 'Individual entry';
+
   add('Reference', record.reference);
-  add('Entry type', record.entryType === 'team' ? '10KM Corporate Relay (team)' : 'Individual entry');
+  add('Entry type', entryTypeLabel);
   add('Status', statusLabel(record.status));
   add('Submitted', fmtDate(record.submittedAt));
   add('Category', categoryLabel(record));
@@ -49,6 +56,14 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     add('Captain email', d.captainEmail);
     add('Captain phone', d.captainPhone);
     if (d.roster.length) add('Runners submitted', `${d.roster.length}`);
+  } else if (record.entryType === 'vendor') {
+    const d = record.details as VendorDetails;
+    add('Business name', d.businessName);
+    add('Contact person', d.contactPerson);
+    add('Email', d.email);
+    add('Phone', d.phone);
+    add('Business location', d.businessLocation);
+    add('Products / services', d.productsServices);
   } else {
     const d = record.details as IndividualDetails;
     add('Full name', d.fullName);

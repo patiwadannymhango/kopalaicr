@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
 import type { IndividualDetails, MobileMoneyProvider, PaymentInfo, RegistrationRecord } from '../types';
 import { RACE_CATEGORIES, INDIVIDUAL_DIVISIONS } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
@@ -10,6 +9,7 @@ import { usePendingPayment } from '../hooks/usePendingPayment';
 import PaymentMethodPicker from '../components/PaymentMethodPicker';
 import ProcessingPanel from '../components/ProcessingPanel';
 import Spinner from '../components/Spinner';
+import Field from '../components/Field';
 import { downloadReceipt } from '../utils/receipt';
 import type { RaceCategory } from '../types';
 
@@ -436,17 +436,5 @@ export default function IndividualRegistration() {
         </div>
       )}
     </div>
-  );
-}
-
-function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
-  return (
-    <label className="field">
-      <span className="field-label">
-        {label}
-        {required && <span className="req">*</span>}
-      </span>
-      {children}
-    </label>
   );
 }

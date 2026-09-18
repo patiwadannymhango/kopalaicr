@@ -38,13 +38,31 @@ export const RELAY_CATEGORIES: { value: RelayCategory; label: string }[] = [
 
 export const RELAY_TEAM_SIZE = 8;
 
+export type VendorRequirement =
+  | ''
+  | 'exhibition-space'
+  | 'vendor-stall'
+  | 'food-beverage-stall'
+  | 'corporate-activation'
+  | 'branding-promotional'
+  | 'other';
+
+export const VENDOR_REQUIREMENTS: { value: VendorRequirement; label: string }[] = [
+  { value: 'exhibition-space', label: 'Exhibition Space' },
+  { value: 'vendor-stall', label: 'Vendor Stall' },
+  { value: 'food-beverage-stall', label: 'Food & Beverage Stall' },
+  { value: 'corporate-activation', label: 'Corporate Activation' },
+  { value: 'branding-promotional', label: 'Branding / Promotional Space' },
+  { value: 'other', label: 'Other' },
+];
+
 export type Gender = '' | 'male' | 'female';
 export type AgeRange = '' | 'Under 18' | '18-29' | '30-39' | '40-49' | '50-59' | '60+';
 export type TShirtSize = '' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL' | '4XL' | '5XL';
 export type PaymentMethod = 'mobile-money' | 'card' | 'bank-transfer';
 export type MobileMoneyProvider = '' | 'MTN_MONEY' | 'AIRTEL_MONEY' | 'ZAMTEL_KWACHA';
 export type RegistrationStatus = 'confirmed' | 'pending-bank-transfer' | 'processing' | 'failed';
-export type EntryType = 'individual' | 'team';
+export type EntryType = 'individual' | 'team' | 'vendor';
 export type Step = 'details' | 'payment' | 'processing' | 'done';
 
 export interface IndividualDetails {
@@ -82,6 +100,24 @@ export interface TeamDetails {
   acceptedTerms: boolean;
 }
 
+export interface VendorDetails {
+  businessName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  businessLocation: string;
+  productsServices: string;
+  category: string; // vendor category code
+  /** Display name for `category` (e.g. "Exhibition Stall") — vendor
+   * categories are entirely backend-driven, unlike RACE_CATEGORIES, so
+   * there's no static list to resolve this from later. Set when the
+   * category is chosen; ignored by the backend (extra JSON fields are
+   * simply dropped by the serializer). */
+  categoryName: string;
+  requirement: VendorRequirement;
+  acceptedTerms: boolean;
+}
+
 export interface PaymentInfo {
   method: PaymentMethod;
   provider?: MobileMoneyProvider;
@@ -96,7 +132,7 @@ export interface RegistrationRecord {
    * null while still pending payment or bank transfer. */
   reference: string | null;
   entryType: EntryType;
-  details: IndividualDetails | TeamDetails;
+  details: IndividualDetails | TeamDetails | VendorDetails;
   payment: PaymentInfo;
   status: RegistrationStatus;
   submittedAt: string;

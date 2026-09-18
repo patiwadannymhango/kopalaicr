@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, RunnerRosterEntry, TeamDetails } from '../types';
-import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
+import { useEffect, useRef, useState } from 'react';
+import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, VendorDetails } from '../types';
+import { VENDOR_REQUIREMENTS } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
-import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
+import { fetchVendorCategories, submitVendorRegistration } from '../api/vendorApi';
 import type { BackendCategory } from '../api/individualApi';
 import { initiatePayment } from '../api/paymentApi';
 import { usePendingPayment } from '../hooks/usePendingPayment';
@@ -12,15 +12,16 @@ import Spinner from '../components/Spinner';
 import Field from '../components/Field';
 import { downloadReceipt } from '../utils/receipt';
 
-const initialDetails: TeamDetails = {
-  teamName: '',
-  companyOrInstitution: '',
-  relayCategory: '',
-  captainFirstName: '',
-  captainLastName: '',
-  captainEmail: '',
-  captainPhone: '',
-  roster: [],
+const initialDetails: VendorDetails = {
+  businessName: '',
+  contactPerson: '',
+  phone: '',
+  email: '',
+  businessLocation: '',
+  productsServices: '',
+  category: '',
+  categoryName: '',
+  requirement: '',
   acceptedTerms: false,
 };
 
@@ -35,22 +36,25 @@ const initialPayment: PaymentInfo = {
 
 type Step = 'details' | 'payment' | 'processing' | 'done';
 
-export default function TeamRegistration() {
+export default function VendorRegistration() {
   const [categories, setCategories] = useState<BackendCategory[] | null>(null);
-  const [details, setDetails] = useState<TeamDetails>(initialDetails);
+  const [details, setDetails] = useState<VendorDetails>(initialDetails);
   const [payment, setPayment] = useState<PaymentInfo>(initialPayment);
   const [step, setStep] = useState<Step>('details');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [record, setRecord] = useState<RegistrationRecord | null>(null);
   const [downloading, setDownloading] = useState(false);
+  // Only matters transiently between the details and payment steps of a
+  // single visit — a ref rather than state since nothing ever renders it.
+  const registrationIdRef = useRef('');
 
   const { pending, setPending, elapsed, outcome, timeoutMs, retry, keepWaiting } = usePendingPayment(
-    'kicr-team-pending',
+    'kicr-vendor-pending',
     (reference) => {
       setRecord({
         reference,
-        entryType: 'team',
+        entryType: 'vendor',
         details,
         payment,
         status: 'confirmed',
@@ -63,61 +67,75 @@ export default function TeamRegistration() {
   );
 
   useEffect(() => {
-    fetchRelayCategories().then(setCategories).catch(() => setCategories([]));
+    fetchVendorCategories().then(setCategories).catch(() => setCategories([]));
   }, []);
 
+  // Resume the "processing" step if a card payment redirected the browser
+  // away to the gateway's hosted checkout and back.
   useEffect(() => {
     if (pending) setStep('processing');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // The relay has a single per-team entry fee regardless of which
-  // category (Men's/Women's/Mixed) the team races in, so the fee always
-  // comes from the one 'relay' category — matching how Home and
-  // Categories look it up.
-  const selectedCategory = categories?.find((c) => c.code === 'relay');
-  const fee = details.relayCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
+  const selectedCategory = categories?.find((c) => c.code === details.category);
+  const fee = details.category ? Number(selectedCategory?.price) || 0 : null;
+  const isFree = details.category ? fee === 0 : false;
 
-  function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
+  function update<K extends keyof VendorDetails>(key: K, value: VendorDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
   }
 
-  function updateRunner(index: number, patch: Partial<RunnerRosterEntry>) {
-    setDetails((d) => ({
-      ...d,
-      roster: d.roster.map((r, i) => (i === index ? { ...r, ...patch } : r)),
-    }));
+  function handleCategoryChange(code: string) {
+    const category = categories?.find((c) => c.code === code);
+    setDetails((d) => ({ ...d, category: code, categoryName: category?.name ?? '' }));
   }
 
-  function addRunner() {
-    if (details.roster.length >= RELAY_TEAM_SIZE) return;
-    setDetails((d) => ({ ...d, roster: [...d.roster, { fullName: '', gender: '' }] }));
-  }
-
-  function removeRunner(index: number) {
-    setDetails((d) => ({ ...d, roster: d.roster.filter((_, i) => i !== index) }));
-  }
-
-  function handleDetailsContinue() {
+  async function handleDetailsContinue() {
+    setError('');
     if (
-      !details.teamName ||
-      !details.companyOrInstitution ||
-      !details.relayCategory ||
-      !details.captainFirstName ||
-      !details.captainLastName ||
-      !details.captainEmail ||
-      !details.captainPhone
+      !details.businessName ||
+      !details.contactPerson ||
+      !details.phone ||
+      !details.email ||
+      !details.category
     ) {
-      setError('Please fill in the team name, company, category and captain details.');
+      setError('Please fill in business name, contact person, phone, email and category.');
       return;
     }
     if (!details.acceptedTerms) {
       setError('Please accept the event terms and indemnity to continue.');
       return;
     }
-    setError('');
-    setPayment((p) => ({ ...p, phoneNumber: p.phoneNumber || details.captainPhone }));
-    setStep('payment');
+
+    setSubmitting(true);
+    try {
+      const registration = await submitVendorRegistration(details);
+
+      if (registration.status === 'CONFIRMED') {
+        // Free category (e.g. Official Sponsor) — the backend confirms on
+        // creation, nothing to pay.
+        setRecord({
+          reference: registration.reference,
+          entryType: 'vendor',
+          details,
+          payment,
+          status: 'confirmed',
+          submittedAt: new Date().toISOString(),
+          amount: registration.amount,
+          currency: registration.currency,
+        });
+        setStep('done');
+        return;
+      }
+
+      setPayment((p) => ({ ...p, phoneNumber: p.phoneNumber || details.phone }));
+      registrationIdRef.current = registration.registrationId;
+      setStep('payment');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong submitting your registration. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function handlePaySubmit() {
@@ -137,30 +155,32 @@ export default function TeamRegistration() {
       setError('Please fill in your billing city, address and postal code.');
       return;
     }
+    if (!registrationIdRef.current) {
+      setError('Something went wrong — please go back and re-enter your details.');
+      return;
+    }
 
     setSubmitting(true);
     try {
-      const registration = await submitTeamRegistration(details);
-
       if (payment.method === 'bank-transfer') {
         setRecord({
-          reference: registration.reference,
-          entryType: 'team',
+          reference: null,
+          entryType: 'vendor',
           details,
           payment,
           status: 'pending-bank-transfer',
           submittedAt: new Date().toISOString(),
-          amount: registration.amount,
-          currency: registration.currency,
+          amount: fee,
+          currency: selectedCategory?.currency ?? 'ZMW',
         });
         setStep('done');
         return;
       }
 
       if (payment.method === 'card') {
-        const backUrl = `${window.location.origin}${import.meta.env.BASE_URL}register`;
+        const backUrl = `${window.location.origin}${import.meta.env.BASE_URL}vendors`;
         const pay = await initiatePayment({
-          registrationId: registration.registrationId,
+          registrationId: registrationIdRef.current,
           paymentMethod: 'CARD',
           city: payment.city,
           address: payment.address,
@@ -169,33 +189,37 @@ export default function TeamRegistration() {
         });
         setPending({
           paymentId: pay.paymentId,
-          registrationId: registration.registrationId,
-          reference: registration.reference,
-          email: details.captainEmail,
-          amount: registration.amount,
-          currency: registration.currency,
+          registrationId: registrationIdRef.current,
+          reference: null,
+          email: details.email,
+          amount: fee,
+          currency: selectedCategory?.currency ?? 'ZMW',
           method: 'card',
           phoneNumber: '',
           provider: '',
         });
         setStep('processing');
         if (pay.redirectUrl) {
+          // Leaving the SPA entirely for the payment gateway's hosted,
+          // PCI-compliant checkout page — registration state (incl. the
+          // pending payment) is already persisted to localStorage by the
+          // time this navigation happens, so the app resumes on return.
           window.location.href = pay.redirectUrl;
           return;
         }
       } else {
         const pay = await initiatePayment({
-          registrationId: registration.registrationId,
+          registrationId: registrationIdRef.current,
           paymentMethod: payment.provider as 'MTN_MONEY' | 'AIRTEL_MONEY' | 'ZAMTEL_KWACHA',
           phoneNumber: payment.phoneNumber,
         });
         setPending({
           paymentId: pay.paymentId,
-          registrationId: registration.registrationId,
-          reference: registration.reference,
-          email: details.captainEmail,
-          amount: registration.amount,
-          currency: registration.currency,
+          registrationId: registrationIdRef.current,
+          reference: null,
+          email: details.email,
+          amount: fee,
+          currency: selectedCategory?.currency ?? 'ZMW',
           method: 'mobile-money',
           phoneNumber: payment.phoneNumber || '',
           provider: payment.provider as MobileMoneyProvider,
@@ -203,7 +227,7 @@ export default function TeamRegistration() {
         setStep('processing');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong submitting your registration. Please try again.');
+      setError(err instanceof Error ? err.message : 'Something went wrong submitting payment. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -219,6 +243,7 @@ export default function TeamRegistration() {
     setPayment(initialPayment);
     setStep('details');
     setRecord(null);
+    registrationIdRef.current = '';
   }
 
   async function handleDownload() {
@@ -236,7 +261,7 @@ export default function TeamRegistration() {
       <ol className="progress-steps">
         <li className={step === 'details' ? 'active' : 'complete'}>
           <span className="dot">{step === 'details' ? '1' : '✓'}</span>
-          <span className="label">Team details</span>
+          <span className="label">Business details</span>
         </li>
         <li className={step === 'payment' || step === 'processing' ? 'active' : step === 'done' ? 'complete' : ''}>
           <span className="dot">{step === 'done' ? '✓' : '2'}</span>
@@ -250,98 +275,77 @@ export default function TeamRegistration() {
 
       {step === 'details' && (
         <>
-          <p className="hint">One entry fee covers the full {RELAY_TEAM_SIZE}-runner team.</p>
+          <p className="hint">Tell us about your business, then choose a category.</p>
 
           <div className="grid-2">
-            <Field label="Team name" required>
-              <input value={details.teamName} onChange={(e) => update('teamName', e.target.value)} placeholder="e.g. Kansanshi Runners" />
+            <Field label="Business / company name" required>
+              <input value={details.businessName} onChange={(e) => update('businessName', e.target.value)} />
             </Field>
-            <Field label="Company / institution" required>
-              <input value={details.companyOrInstitution} onChange={(e) => update('companyOrInstitution', e.target.value)} />
+            <Field label="Contact person" required>
+              <input value={details.contactPerson} onChange={(e) => update('contactPerson', e.target.value)} placeholder="e.g. Jane Mwansa" />
             </Field>
-            <Field label="Relay category" required>
-              <select value={details.relayCategory} onChange={(e) => update('relayCategory', e.target.value as TeamDetails['relayCategory'])}>
+            <Field label="Phone" required>
+              <input value={details.phone} onChange={(e) => update('phone', e.target.value)} placeholder="e.g. 097 000 0000" />
+            </Field>
+            <Field label="Email" required>
+              <input type="email" value={details.email} onChange={(e) => update('email', e.target.value)} placeholder="you@example.com" />
+            </Field>
+            <Field label="Business location">
+              <input value={details.businessLocation} onChange={(e) => update('businessLocation', e.target.value)} placeholder="e.g. Chingola" />
+            </Field>
+            <Field label="Category" required>
+              <select value={details.category} onChange={(e) => handleCategoryChange(e.target.value)}>
                 <option value="">Select category</option>
-                {RELAY_CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                {categories?.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name} — {Number(c.price) > 0 ? `K${Number(c.price).toLocaleString()}` : 'FREE'}
+                  </option>
                 ))}
               </select>
             </Field>
           </div>
 
-          {details.relayCategory && (
+          <Field label="Products / services">
+            <textarea rows={3} value={details.productsServices} onChange={(e) => update('productsServices', e.target.value)} />
+          </Field>
+
+          <Field label="Exhibition / activation requirement">
+            <select value={details.requirement} onChange={(e) => update('requirement', e.target.value as VendorDetails['requirement'])}>
+              <option value="">Select requirement</option>
+              {VENDOR_REQUIREMENTS.map((r) => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </Field>
+
+          {details.category && (
             <div className="fee-preview">
-              <span>Entry fee — full team</span>
+              <span>Amount payable for {details.categoryName}</span>
               {categories === null ? (
                 <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
               ) : (
-                <strong>{`K${fee}`}</strong>
+                <strong>{isFree ? 'FREE' : `K${fee}`}</strong>
               )}
             </div>
           )}
 
-          <div className="grid-2">
-            <Field label="Captain first name" required>
-              <input value={details.captainFirstName} onChange={(e) => update('captainFirstName', e.target.value)} />
-            </Field>
-            <Field label="Captain last name" required>
-              <input value={details.captainLastName} onChange={(e) => update('captainLastName', e.target.value)} />
-            </Field>
-            <Field label="Captain email" required>
-              <input type="email" value={details.captainEmail} onChange={(e) => update('captainEmail', e.target.value)} placeholder="you@example.com" />
-            </Field>
-            <Field label="Captain phone" required>
-              <input value={details.captainPhone} onChange={(e) => update('captainPhone', e.target.value)} placeholder="e.g. 097 000 0000" />
-            </Field>
-          </div>
-
-          <div className="roster">
-            <div className="roster-head">
-              <span className="field-label">
-                Runner roster <span className="optional">optional — add now or later</span>
-              </span>
-              <span className="roster-count">{details.roster.length} of {RELAY_TEAM_SIZE} included</span>
-            </div>
-            <p className="hint">
-              One entry fee covers up to {RELAY_TEAM_SIZE} runners. Add them now if you know your full squad, or
-              leave this for later and send the names through to the organisers before race day.
-            </p>
-
-            {details.roster.map((runner, i) => (
-              <div className="roster-row" key={i}>
-                <span className="roster-row-num">{i + 1}</span>
-                <input
-                  value={runner.fullName}
-                  onChange={(e) => updateRunner(i, { fullName: e.target.value })}
-                  placeholder="Runner full name"
-                />
-                <select value={runner.gender} onChange={(e) => updateRunner(i, { gender: e.target.value as RunnerRosterEntry['gender'] })}>
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-                <button type="button" className="roster-remove" onClick={() => removeRunner(i)} aria-label={`Remove runner ${i + 1}`}>
-                  ×
-                </button>
-              </div>
-            ))}
-
-            {details.roster.length < RELAY_TEAM_SIZE && (
-              <button type="button" className="btn-ghost btn-full" onClick={addRunner}>
-                + Add runner
-              </button>
-            )}
-          </div>
-
           <label className="checkbox-row">
             <input type="checkbox" checked={details.acceptedTerms} onChange={(e) => update('acceptedTerms', e.target.checked)} />
-            I confirm the team details are correct and accept the event terms and indemnity on behalf of the team.
+            I confirm the details are correct and accept the event terms and indemnity.
           </label>
 
           {error && <p className="error">{error}</p>}
 
-          <button className="btn-primary btn-full" onClick={handleDetailsContinue}>
-            {fee ? `Continue to payment — K${fee.toFixed(2)}` : 'Continue to payment'}
+          <button className="btn-primary btn-full" onClick={handleDetailsContinue} disabled={submitting || !categories}>
+            {submitting ? (
+              <span className="btn-loading">
+                <Spinner size={14} /> Submitting…
+              </span>
+            ) : isFree ? (
+              'Register — free'
+            ) : (
+              'Continue to payment'
+            )}
           </button>
         </>
       )}
@@ -350,10 +354,10 @@ export default function TeamRegistration() {
         <>
           <div className="summary-row">
             <span>Category</span>
-            <strong>{selectedCategory?.name ?? RELAY_CATEGORIES.find((c) => c.value === details.relayCategory)?.label ?? '—'}</strong>
+            <strong>{details.categoryName || '—'}</strong>
           </div>
           <div className="summary-row">
-            <span>Entry fee — full team</span>
+            <span>Amount payable</span>
             <strong className="fee-highlight">{`K${(fee ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
           </div>
 
@@ -369,17 +373,15 @@ export default function TeamRegistration() {
                   {payment.method === 'card' ? 'Redirecting to checkout…' : payment.method === 'bank-transfer' ? 'Saving…' : 'Sending prompt…'}
                 </span>
               ) : payment.method === 'card' ? (
-                fee ? `Pay by card — K${fee.toFixed(2)}` : 'Continue to card checkout'
+                `Pay by card — K${(fee ?? 0).toFixed(2)}`
               ) : payment.method === 'bank-transfer' ? (
-                'Register — we\'ll pay by bank transfer'
-              ) : fee ? (
-                `Send payment prompt — K${fee.toFixed(2)}`
+                "Register — I'll pay by bank transfer"
               ) : (
-                'Confirm registration'
+                `Send payment prompt — K${(fee ?? 0).toFixed(2)}`
               )}
             </button>
             <button className="btn-text" onClick={() => setStep('details')} disabled={submitting}>
-              Back to team details
+              Back to details
             </button>
           </div>
         </>
@@ -402,8 +404,8 @@ export default function TeamRegistration() {
           <h2>{record.status === 'pending-bank-transfer' ? 'Registration submitted' : 'Registration confirmed'}</h2>
           <p className="hint">
             {record.status === 'pending-bank-transfer'
-              ? `We've saved your team's registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${details.captainEmail}.`
-              : `A confirmation has been sent to ${details.captainEmail}. Keep your reference safe — you'll need it to look up your entry later.`}
+              ? `We've saved your registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${details.email}.`
+              : `A confirmation has been sent to ${details.email}. Keep your reference safe — you'll need it to look up your entry later.`}
           </p>
 
           {record.reference && (
@@ -414,7 +416,7 @@ export default function TeamRegistration() {
           )}
 
           <div className="actions actions-stack">
-            <button className="btn-primary btn-full" onClick={handleDownload} disabled={downloading}>
+            <button className="btn-ghost btn-full" onClick={handleDownload} disabled={downloading}>
               {downloading ? (
                 <span className="btn-loading">
                   <Spinner size={14} /> Preparing receipt…
@@ -423,8 +425,8 @@ export default function TeamRegistration() {
                 'Download receipt'
               )}
             </button>
-            <button className="btn-text" onClick={handleStartOver}>
-              Register another team
+            <button className="btn-primary btn-full" onClick={handleStartOver}>
+              Register another
             </button>
           </div>
         </div>
