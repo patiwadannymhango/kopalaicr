@@ -652,7 +652,10 @@ textarea {
   background-image:
     radial-gradient(ellipse 60% 45% at 82% 10%, rgba(232, 185, 77, 0.22) 0%, rgba(232, 185, 77, 0) 70%),
     radial-gradient(ellipse 50% 40% at 10% 90%, rgba(217, 119, 47, 0.16) 0%, rgba(217, 119, 47, 0) 70%),
-    linear-gradient(180deg, var(--void) 0%, #14100c 60%, var(--void) 100%);
+    linear-gradient(180deg, rgba(9, 7, 5, 0.55) 0%, rgba(15, 12, 9, 0.72) 55%, var(--void) 100%),
+    url('/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
   z-index: 0;
 }
 
