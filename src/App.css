@@ -663,18 +663,6 @@ textarea {
   margin: 0 auto;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  align-items: center;
-  gap: 56px;
-}
-
-.hero-side {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .eyebrow {
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -711,16 +699,6 @@ textarea {
   font-weight: 500;
   max-width: 620px;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
-}
-
-@media (max-width: 900px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  .hero-side {
-    justify-content: flex-start;
-  }
 }
 
 .hero-cta {
@@ -786,6 +764,7 @@ textarea {
   padding: 28px 32px;
   width: 100%;
   max-width: 360px;
+  margin-bottom: 28px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
 }
 
