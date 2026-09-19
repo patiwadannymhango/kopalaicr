@@ -663,6 +663,18 @@ textarea {
   margin: 0 auto;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: center;
+  gap: 56px;
+}
+
+.hero-side {
+  display: flex;
+  justify-content: center;
+}
+
 .eyebrow {
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -699,6 +711,54 @@ textarea {
   font-weight: 500;
   max-width: 620px;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero-side {
+    justify-content: flex-start;
+  }
+}
+
+.hero-distances {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.hero-distance-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-distance-pill:hover {
+  border-color: var(--copper);
+  transform: translateY(-1px);
+}
+
+.hero-distance-pill strong {
+  color: var(--copper);
+  font-weight: 700;
+}
+
+.hero-distance-pill-fee {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gold);
 }
 
 .hero-cta {
@@ -760,11 +820,10 @@ textarea {
   gap: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 16px;
   padding: 28px 32px;
   width: 100%;
   max-width: 360px;
-  margin-bottom: 28px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
 }
 
@@ -784,7 +843,7 @@ textarea {
 .countdown-cells .cell {
   flex: 1;
   background: var(--cream);
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 12px 8px;
   text-align: center;
   min-width: 52px;
@@ -1008,80 +1067,6 @@ textarea {
   color: var(--copper);
   font-size: 20px;
   font-weight: 800;
-}
-
-.race-table {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--surface);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
-  margin-bottom: 28px;
-}
-
-.race-row {
-  display: grid;
-  grid-template-columns: 2.2fr 1fr 1fr;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.2s ease;
-}
-
-.race-row:hover {
-  background: var(--cream);
-}
-
-.race-row:last-child {
-  border-bottom: none;
-}
-
-.race-row-name {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--ink);
-}
-
-.race-row-dist {
-  justify-self: start;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--copper-bright);
-  background: var(--cream);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 4px 12px;
-}
-
-.race-row-fee {
-  text-align: right;
-  font-weight: 800;
-  font-size: 18px;
-  color: var(--gold);
-}
-
-@media (max-width: 720px) {
-  .race-row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "name fee" "dist dist";
-    row-gap: 8px;
-    padding: 14px 18px;
-  }
-  .race-row-name {
-    grid-area: name;
-  }
-  .race-row-fee {
-    grid-area: fee;
-  }
-  .race-row-dist {
-    grid-area: dist;
-  }
 }
 
 .package-grid {

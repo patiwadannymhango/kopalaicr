@@ -31,46 +31,51 @@ export default function Home() {
       <section className="hero">
         <div className="hero-bg" aria-hidden="true" />
 
-        <div className="hero-inner">
-          <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
-          <h1>{EVENT.motto}</h1>
-          <p className="lede hero-lede">
-            {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
-            other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
-            Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
-            Athletics.
-          </p>
+        <div className="hero-inner hero-grid">
+          <div className="hero-main">
+            <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+            <h1>{EVENT.motto}</h1>
+            <p className="lede hero-lede">
+              {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
+              other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
+              Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
+              Athletics.
+            </p>
 
-          <div className="hero-cta">
-            <Link to="/register" className="btn-primary">
-              Register now
-            </Link>
-            <a href="#categories" className="btn-ghost">See race categories</a>
-            <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
-          </div>
-
-          <div className="countdown">
-            <span className="countdown-label">Flag-off in</span>
-            <div className="countdown-cells">
-              <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
-              <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
-              <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
-              <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
+            <div className="hero-distances">
+              {RACE_FORMATS.map((d) => {
+                const fee = feeFor(d.categoryCode);
+                return (
+                  <Link key={d.categoryCode} to="/categories" className="hero-distance-pill">
+                    <span className="hero-distance-pill-main">
+                      <strong>{d.code}</strong> {d.label}
+                    </span>
+                    <span className="hero-distance-pill-fee">{`K${fee}`}</span>
+                  </Link>
+                );
+              })}
             </div>
-            <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
+
+            <div className="hero-cta">
+              <Link to="/register" className="btn-primary">
+                Register now
+              </Link>
+              <a href="#categories" className="btn-ghost">See race categories</a>
+              <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
+            </div>
           </div>
 
-          <div className="race-table">
-            {RACE_FORMATS.slice(0, 3).map((d) => {
-              const fee = feeFor(d.categoryCode);
-              return (
-                <Link key={d.categoryCode} to="/categories" className="race-row">
-                  <span className="race-row-name">{d.label}</span>
-                  <span className="race-row-dist">{d.code}</span>
-                  <span className="race-row-fee">{`K${fee}`}</span>
-                </Link>
-              );
-            })}
+          <div className="hero-side">
+            <div className="countdown">
+              <span className="countdown-label">Flag-off in</span>
+              <div className="countdown-cells">
+                <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
+                <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
+                <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
+                <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
+              </div>
+              <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
+            </div>
           </div>
         </div>
       </section>
