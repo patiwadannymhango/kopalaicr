@@ -28,57 +28,69 @@ export default function Home() {
 
   return (
     <main>
+      <div className="flagoff-bar">
+        <div className="section-inner flagoff-bar-inner">
+          <span className="flagoff-bar-label">Flag-off in</span>
+          <div className="flagoff-bar-cells">
+            <div className="flagoff-bar-cell">
+              <span className="flagoff-bar-num">{days}</span>
+              <span className="flagoff-bar-lbl">Days</span>
+            </div>
+            <span className="flagoff-bar-sep">:</span>
+            <div className="flagoff-bar-cell">
+              <span className="flagoff-bar-num">{hours}</span>
+              <span className="flagoff-bar-lbl">Hrs</span>
+            </div>
+            <span className="flagoff-bar-sep">:</span>
+            <div className="flagoff-bar-cell">
+              <span className="flagoff-bar-num">{minutes}</span>
+              <span className="flagoff-bar-lbl">Min</span>
+            </div>
+            <span className="flagoff-bar-sep">:</span>
+            <div className="flagoff-bar-cell">
+              <span className="flagoff-bar-num">{seconds}</span>
+              <span className="flagoff-bar-lbl">Sec</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <section className="hero">
         <div className="hero-bg" aria-hidden="true" />
 
-        <div className="hero-inner hero-grid">
-          <div className="hero-main">
-            <Reveal as="div">
-              <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
-              <h1>{EVENT.motto}</h1>
-              <p className="lede hero-lede">
-                {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
-                other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
-                Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
-                Athletics.
-              </p>
-            </Reveal>
+        <div className="hero-inner">
+          <Reveal as="div">
+            <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+            <h1>{EVENT.motto}</h1>
+            <p className="lede hero-lede">
+              {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
+              other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
+              Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
+              Athletics.
+            </p>
+          </Reveal>
 
-            <Reveal as="div" delay={120} className="pricing-grid">
-              {RACE_FORMATS.map((d) => (
-                <div className="pricing-grid-cell" key={d.categoryCode}>
-                  <div className="pricing-grid-name">
-                    {d.code} {d.label}
-                  </div>
-                  <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
+          <Reveal as="div" delay={120} className="pricing-grid">
+            {RACE_FORMATS.map((d) => (
+              <div className="pricing-grid-cell" key={d.categoryCode}>
+                <div className="pricing-grid-name">
+                  {d.code} {d.label}
                 </div>
-              ))}
-              {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
-                <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
-              ))}
-            </Reveal>
-
-            <Reveal as="div" delay={220} className="hero-cta">
-              <Link to="/register" className="btn-primary">
-                Register now
-              </Link>
-              <Link to="/categories" className="btn-ghost">See race categories</Link>
-              <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
-            </Reveal>
-          </div>
-
-          <div className="hero-side">
-            <Reveal as="div" delay={160} className="countdown">
-              <span className="countdown-label">Flag-off in</span>
-              <div className="countdown-cells">
-                <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
-                <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
-                <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
-                <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
+                <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
               </div>
-              <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
-            </Reveal>
-          </div>
+            ))}
+            {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
+              <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
+            ))}
+          </Reveal>
+
+          <Reveal as="div" delay={220} className="hero-cta">
+            <Link to="/register" className="btn-primary">
+              Register now
+            </Link>
+            <Link to="/categories" className="btn-ghost">See race categories</Link>
+            <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
+          </Reveal>
         </div>
       </section>
 
