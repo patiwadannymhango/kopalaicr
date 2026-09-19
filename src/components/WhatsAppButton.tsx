@@ -1,4 +1,11 @@
+import { useEffect, useState } from 'react';
 import { EVENT } from '../data/event';
+
+// Below this scroll distance, the hero's own content can sit in the same
+// bottom-right corner the button floats in (see App.css .whatsapp-fab) —
+// staying hidden until the visitor scrolls past it avoids the button
+// covering hero text on short/mobile viewports.
+const SHOW_AFTER_SCROLL_PX = 160;
 
 /**
  * Floating glowing WhatsApp button, fixed bottom-right on every page.
@@ -6,11 +13,22 @@ import { EVENT } from '../data/event';
  * EVENT.phone-guarded WhatsApp links elsewhere — Layout footer, Sponsors).
  */
 export default function WhatsAppButton() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setVisible(window.scrollY > SHOW_AFTER_SCROLL_PX);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   if (!EVENT.phone) return null;
 
   return (
     <a
-      className="whatsapp-fab"
+      className={`whatsapp-fab${visible ? ' whatsapp-fab-visible' : ''}`}
       href={`https://wa.me/${EVENT.phone.replace(/[^\d]/g, '')}`}
       target="_blank"
       rel="noreferrer"

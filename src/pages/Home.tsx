@@ -33,16 +33,18 @@ export default function Home() {
 
         <div className="hero-inner hero-grid">
           <div className="hero-main">
-            <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
-            <h1>{EVENT.motto}</h1>
-            <p className="lede hero-lede">
-              {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
-              other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
-              Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
-              Athletics.
-            </p>
+            <Reveal as="div">
+              <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+              <h1>{EVENT.motto}</h1>
+              <p className="lede hero-lede">
+                {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
+                other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
+                Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
+                Athletics.
+              </p>
+            </Reveal>
 
-            <div className="pricing-grid">
+            <Reveal as="div" delay={120} className="pricing-grid">
               {RACE_FORMATS.map((d) => (
                 <div className="pricing-grid-cell" key={d.categoryCode}>
                   <div className="pricing-grid-name">
@@ -54,19 +56,19 @@ export default function Home() {
               {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
                 <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
               ))}
-            </div>
+            </Reveal>
 
-            <div className="hero-cta">
+            <Reveal as="div" delay={220} className="hero-cta">
               <Link to="/register" className="btn-primary">
                 Register now
               </Link>
               <Link to="/categories" className="btn-ghost">See race categories</Link>
               <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
-            </div>
+            </Reveal>
           </div>
 
           <div className="hero-side">
-            <div className="countdown">
+            <Reveal as="div" delay={160} className="countdown">
               <span className="countdown-label">Flag-off in</span>
               <div className="countdown-cells">
                 <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
@@ -75,7 +77,7 @@ export default function Home() {
                 <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
               </div>
               <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

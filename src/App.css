@@ -669,7 +669,7 @@ textarea {
 .hero-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  align-items: center;
+  align-items: start;
   gap: 56px;
 }
 
@@ -1356,10 +1356,21 @@ textarea {
   align-items: center;
   justify-content: center;
   animation: whatsapp-glow 2.4s ease-in-out infinite;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.25s ease;
+  /* Hidden until scrolled past the hero (see WhatsAppButton.tsx) so it
+     never covers hero text on short/mobile viewports at first paint. */
+  opacity: 0;
+  transform: scale(0.7);
+  pointer-events: none;
 }
 
-.whatsapp-fab:hover {
+.whatsapp-fab-visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.whatsapp-fab-visible:hover {
   transform: scale(1.08);
 }
 
