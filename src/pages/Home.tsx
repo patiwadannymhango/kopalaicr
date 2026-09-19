@@ -70,6 +70,14 @@ export default function Home() {
                 Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
                 Athletics.
               </p>
+              <div className="hero-cta">
+                <Link to="/register" className="btn-primary">
+                  Register
+                </Link>
+                <Link to="/exhibitors" className="btn-vendor">
+                  Exhibitor registration
+                </Link>
+              </div>
             </Reveal>
 
             <Reveal as="div" delay={120} className="pricing-grid">

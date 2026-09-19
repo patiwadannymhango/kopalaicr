@@ -844,6 +844,20 @@ textarea {
   }
 }
 
+.hero-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0 28px;
+}
+
+.hero-cta .btn-primary,
+.hero-cta .btn-vendor {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
 .btn-vendor {
   background: var(--gold);
   color: var(--on-light);
