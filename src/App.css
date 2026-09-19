@@ -121,6 +121,12 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
+}
+
+.site-header-actions .btn-primary,
+.site-header-actions .btn-vendor {
+  white-space: nowrap;
 }
 
 .section-inner, .site-header-inner, .site-footer-inner {
