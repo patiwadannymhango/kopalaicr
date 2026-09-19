@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EVENT, RACE_FORMATS,DEFAULT_ENTRY_FEE } from '../data/event';
+import { GALLERY_IMAGES } from '../data/gallery';
 import { useCountdown } from '../hooks/useCountdown';
 import { fetchIndividualCategories } from '../api/individualApi';
 import { fetchRelayCategories } from '../api/teamApi';
@@ -58,39 +59,59 @@ export default function Home() {
       <section className="hero">
         <div className="hero-bg" aria-hidden="true" />
 
-        <div className="hero-inner">
-          <Reveal as="div">
-            <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
-            <h1>{EVENT.motto}</h1>
-            <p className="lede hero-lede">
-              {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
-              other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
-              Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
-              Athletics.
-            </p>
-          </Reveal>
+        <div className="hero-inner hero-grid">
+          <div className="hero-main">
+            <Reveal as="div">
+              <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+              <h1>{EVENT.motto}</h1>
+              <p className="lede hero-lede">
+                {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
+                other provinces for a 10KM Corporate Relay, a 5KM Individual Race &amp; Walk, a 10KM Individual
+                Race, a 21KM Individual Race &amp; Walk, a 100m CEO Race, a 100m Directors Race, or Kids
+                Athletics.
+              </p>
+            </Reveal>
 
-          <Reveal as="div" delay={120} className="pricing-grid">
-            {RACE_FORMATS.map((d) => (
-              <div className="pricing-grid-cell" key={d.categoryCode}>
-                <div className="pricing-grid-name">
-                  {d.code} {d.label}
+            <Reveal as="div" delay={120} className="pricing-grid">
+              {RACE_FORMATS.map((d) => (
+                <div className="pricing-grid-cell" key={d.categoryCode}>
+                  <div className="pricing-grid-name">
+                    {d.code} {d.label}
+                  </div>
+                  <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
                 </div>
-                <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
-              </div>
-            ))}
-            {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
-              <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
-            ))}
-          </Reveal>
+              ))}
+              {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
+                <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
+              ))}
+            </Reveal>
 
-          <Reveal as="div" delay={220} className="hero-cta">
-            <Link to="/register" className="btn-primary">
-              Register now
-            </Link>
-            <Link to="/categories" className="btn-ghost">See race categories</Link>
-            <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
-          </Reveal>
+            <Reveal as="div" delay={220} className="hero-cta">
+              <Link to="/register" className="btn-primary">
+                Register now
+              </Link>
+              <Link to="/categories" className="btn-ghost">See race categories</Link>
+              <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
+            </Reveal>
+          </div>
+
+          <div className="hero-side">
+            <Reveal as="div" delay={160} className="gallery-preview">
+              <div className="gallery-preview-head">
+                <span className="gallery-preview-label">2025 Gallery</span>
+                <Link to="/gallery" className="gallery-preview-link">
+                  View all →
+                </Link>
+              </div>
+              <div className="gallery-preview-grid">
+                {GALLERY_IMAGES.slice(0, 4).map((img) => (
+                  <Link to="/gallery" key={img.id} className="gallery-preview-thumb">
+                    <img src={img.thumb} alt={img.alt} loading="lazy" />
+                  </Link>
+                ))}
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
