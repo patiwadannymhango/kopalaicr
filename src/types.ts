@@ -49,7 +49,7 @@ export type VendorRequirement =
 
 export const VENDOR_REQUIREMENTS: { value: VendorRequirement; label: string }[] = [
   { value: 'exhibition-space', label: 'Exhibition Space' },
-  { value: 'vendor-stall', label: 'Vendor Stall' },
+  { value: 'vendor-stall', label: 'Exhibitor Stall' },
   { value: 'food-beverage-stall', label: 'Food & Beverage Stall' },
   { value: 'corporate-activation', label: 'Corporate Activation' },
   { value: 'branding-promotional', label: 'Branding / Promotional Space' },

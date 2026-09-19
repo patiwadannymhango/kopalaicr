@@ -39,7 +39,7 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     record.entryType === 'team'
       ? '10KM Corporate Relay (team)'
       : record.entryType === 'vendor'
-        ? 'Vendor / exhibitor entry'
+        ? 'Exhibitor entry'
         : 'Individual entry';
 
   add('Reference', record.reference);

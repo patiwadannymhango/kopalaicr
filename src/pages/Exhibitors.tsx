@@ -1,11 +1,11 @@
 import { EVENT } from '../data/event';
 import VendorRegistration from '../registration/VendorRegistration';
 
-export default function Vendors() {
+export default function Exhibitors() {
   return (
     <main>
       <section className="page-hero">
-        <div className="eyebrow">Vendors &amp; Exhibitors</div>
+        <div className="eyebrow">Exhibitors</div>
         <h1>Register your business</h1>
         <p className="lede">
           Secure a stall, exhibition space or activation at {EVENT.shortTitle} — fill in your details, pick a

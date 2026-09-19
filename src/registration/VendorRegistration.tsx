@@ -178,7 +178,7 @@ export default function VendorRegistration() {
       }
 
       if (payment.method === 'card') {
-        const backUrl = `${window.location.origin}${import.meta.env.BASE_URL}vendors`;
+        const backUrl = `${window.location.origin}${import.meta.env.BASE_URL}exhibitors`;
         const pay = await initiatePayment({
           registrationId: registrationIdRef.current,
           paymentMethod: 'CARD',

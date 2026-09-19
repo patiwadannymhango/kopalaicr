@@ -58,9 +58,10 @@ main {
 }
 
 .brand-badge {
-  height: 34px;
-  width: 34px;
-  border-radius: 8px;
+  height: 40px;
+  width: auto;
+  max-width: 160px;
+  border-radius: 0;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -1606,9 +1607,9 @@ textarea {
 }
 
 .splash-badge {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: min(260px, 70vw);
+  height: auto;
+  border-radius: 0;
   object-fit: contain;
 }
 

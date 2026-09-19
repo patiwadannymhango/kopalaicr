@@ -9,7 +9,7 @@ export default function Layout() {
       <header className="site-header">
         <div className="site-header-inner">
           <Link to="/" className="brand">
-            <img src="/favicon.svg" alt="" className="brand-badge" aria-hidden="true" />
+            <img src="/logo.png" alt="" className="brand-badge" aria-hidden="true" />
             <span className="brand-title-lg">{EVENT.shortTitle}</span>
           </Link>
           <nav className="site-nav">
@@ -17,7 +17,7 @@ export default function Layout() {
             <NavLink to="/about">About</NavLink>
             <NavLink to="/categories">Categories</NavLink>
             <NavLink to="/sponsors">Sponsors</NavLink>
-            <NavLink to="/vendors">Vendors</NavLink>
+            <NavLink to="/exhibitors">Exhibitors</NavLink>
           </nav>
           <Link to="/register" className="btn-primary btn-sm">
             Register
@@ -37,7 +37,7 @@ export default function Layout() {
         <div className="site-footer-inner">
           <div className="footer-top">
             <div className="footer-brand">
-              <img src="/favicon.svg" alt="" className="brand-badge" aria-hidden="true" />
+              <img src="/logo.png" alt="" className="brand-badge" aria-hidden="true" />
               <div>
                 <div className="brand-title">{EVENT.title}</div>
                 <div className="brand-org">{EVENT.motto}</div>
@@ -53,7 +53,7 @@ export default function Layout() {
                 <span className="footer-label">Register</span>
                 <Link to="/register">Team / relay entry</Link>
                 <Link to="/register">Individual entry</Link>
-                <Link to="/vendors">Vendor &amp; exhibitor entry</Link>
+                <Link to="/exhibitors">Exhibitor entry</Link>
                 <a href="/register#track">Track registration</a>
               </div>
               <div>
