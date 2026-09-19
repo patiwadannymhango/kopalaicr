@@ -105,7 +105,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="gallery-preview-grid">
-                {GALLERY_IMAGES.slice(0, 6).map((img) => (
+                {GALLERY_IMAGES.slice(0, 9).map((img) => (
                   <Link to="/gallery" key={img.id} className="gallery-preview-thumb">
                     <img src={img.thumb} alt={img.alt} loading="lazy" />
                   </Link>
