@@ -42,15 +42,14 @@ export default function Home() {
               Athletics.
             </p>
 
-            <div className="hero-distances">
+            <div className="race-table">
               {RACE_FORMATS.map((d) => {
                 const fee = feeFor(d.categoryCode);
                 return (
-                  <Link key={d.categoryCode} to="/categories" className="hero-distance-pill">
-                    <span className="hero-distance-pill-main">
-                      <strong>{d.code}</strong> {d.label}
-                    </span>
-                    <span className="hero-distance-pill-fee">{`K${fee}`}</span>
+                  <Link key={d.categoryCode} to="/categories" className="race-row">
+                    <span className="race-row-name">{d.label}</span>
+                    <span className="race-row-dist">{d.code}</span>
+                    <span className="race-row-fee">{`K${fee}`}</span>
                   </Link>
                 );
               })}
