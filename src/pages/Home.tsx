@@ -42,17 +42,15 @@ export default function Home() {
               Athletics.
             </p>
 
-            <div className="race-table">
-              {RACE_FORMATS.map((d) => {
-                const fee = feeFor(d.categoryCode);
-                return (
-                  <Link key={d.categoryCode} to="/categories" className="race-row">
-                    <span className="race-row-name">{d.label}</span>
-                    <span className="race-row-dist">{d.code}</span>
-                    <span className="race-row-fee">{`K${fee}`}</span>
-                  </Link>
-                );
-              })}
+            <div className="countdown">
+              <span className="countdown-label">Flag-off in</span>
+              <div className="countdown-cells">
+                <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
+                <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
+                <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
+                <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
+              </div>
+              <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
             </div>
 
             <div className="hero-cta">
@@ -65,15 +63,17 @@ export default function Home() {
           </div>
 
           <div className="hero-side">
-            <div className="countdown">
-              <span className="countdown-label">Flag-off in</span>
-              <div className="countdown-cells">
-                <div className="cell"><div className="num">{days}</div><div className="lbl">Days</div></div>
-                <div className="cell"><div className="num">{hours}</div><div className="lbl">Hrs</div></div>
-                <div className="cell"><div className="num">{minutes}</div><div className="lbl">Min</div></div>
-                <div className="cell"><div className="num">{seconds}</div><div className="lbl">Sec</div></div>
-              </div>
-              <div className="countdown-foot">{EVENT.date} · {EVENT.venue}</div>
+            <div className="race-table">
+              {RACE_FORMATS.map((d) => {
+                const fee = feeFor(d.categoryCode);
+                return (
+                  <Link key={d.categoryCode} to="/categories" className="race-row">
+                    <span className="race-row-name">{d.label}</span>
+                    <span className="race-row-dist">{d.code}</span>
+                    <span className="race-row-fee">{`K${fee}`}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>

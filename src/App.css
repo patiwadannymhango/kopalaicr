@@ -1032,6 +1032,7 @@ textarea {
 }
 
 .race-table {
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
   overflow: hidden;
