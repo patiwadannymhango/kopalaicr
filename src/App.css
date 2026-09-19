@@ -1308,8 +1308,8 @@ textarea {
 
 .partner-logo-grid.compact .partner-logo-card.featured {
   width: 240px;
-  height: 104px;
-  padding: 14px;
+  height: 56px;
+  padding: 8px 14px;
   border-width: 2px;
 }
 
@@ -1322,8 +1322,8 @@ textarea {
 
   .partner-logo-grid.compact .partner-logo-card.featured {
     width: 168px;
-    height: 74px;
-    padding: 10px;
+    height: 46px;
+    padding: 6px 10px;
   }
 }
 
