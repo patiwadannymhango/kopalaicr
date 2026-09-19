@@ -42,32 +42,18 @@ export default function Home() {
               Athletics.
             </p>
 
-            <div className="pricing-table-wrap hero-pricing-table">
-              <table className="pricing-table">
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th className="pricing-table-fee-col">Entry fee</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {RACE_FORMATS.map((d) => {
-                    const fee = feeFor(d.categoryCode);
-                    return (
-                      <tr key={d.categoryCode}>
-                        <td>
-                          <span className="pricing-table-name">
-                            {d.code} {d.label}
-                          </span>
-                        </td>
-                        <td className="pricing-table-fee-col">
-                          <span className="pricing-table-fee">{`K${fee}`}</span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="pricing-grid">
+              {RACE_FORMATS.map((d) => (
+                <div className="pricing-grid-cell" key={d.categoryCode}>
+                  <div className="pricing-grid-name">
+                    {d.code} {d.label}
+                  </div>
+                  <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
+                </div>
+              ))}
+              {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
+                <div className="pricing-grid-cell pricing-grid-cell-empty" key={`filler-${i}`} />
+              ))}
             </div>
 
             <div className="hero-cta">
