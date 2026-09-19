@@ -690,7 +690,7 @@ textarea {
 
 .gallery-preview {
   width: 100%;
-  max-width: 460px;
+  max-width: 620px;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -726,7 +726,7 @@ textarea {
 
 .gallery-preview-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
