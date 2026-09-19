@@ -672,7 +672,7 @@ textarea {
 
 .hero-side {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .eyebrow {
@@ -782,7 +782,7 @@ textarea {
   gap: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 4px;
   padding: 28px 32px;
   width: 100%;
   max-width: 360px;
@@ -805,7 +805,7 @@ textarea {
 .countdown-cells .cell {
   flex: 1;
   background: var(--cream);
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 12px 8px;
   text-align: center;
   min-width: 52px;
