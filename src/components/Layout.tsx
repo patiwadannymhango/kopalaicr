@@ -20,9 +20,14 @@ export default function Layout() {
             <NavLink to="/exhibitors">Exhibitors</NavLink>
             <NavLink to="/gallery">Gallery 2025</NavLink>
           </nav>
-          <Link to="/register" className="btn-primary btn-sm">
-            Register
-          </Link>
+          <div className="site-header-actions">
+            <Link to="/exhibitors" className="btn-vendor btn-sm">
+              Exhibitor registration
+            </Link>
+            <Link to="/register" className="btn-primary btn-sm">
+              Register
+            </Link>
+          </div>
         </div>
       </header>
 

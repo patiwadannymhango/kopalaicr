@@ -86,13 +86,6 @@ export default function Home() {
               ))}
             </Reveal>
 
-            <Reveal as="div" delay={220} className="hero-cta">
-              <Link to="/register" className="btn-primary">
-                Register now
-              </Link>
-              <Link to="/categories" className="btn-ghost">See race categories</Link>
-              <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
-            </Reveal>
           </div>
 
           <div className="hero-side">
