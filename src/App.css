@@ -1162,6 +1162,7 @@ textarea {
 .partner-logo-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 16px;
 }
@@ -1197,11 +1198,92 @@ textarea {
   border-color: rgba(0, 0, 0, 0.1);
 }
 
+/* The event's main/title sponsor (see PARTNER_LOGOS' featured flag) gets a
+   gold border and glow so it stands out from the other official partners;
+   in the full Sponsors-page grid it's pulled out into its own banner
+   instead (.partner-featured-banner below), so sizing here only matters
+   for the compact header strip (see .partner-logo-grid.compact below). */
+.partner-logo-card.featured {
+  position: relative;
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 28px rgba(232, 185, 77, 0.35);
+}
+
+.partner-logo-card.featured:hover {
+  box-shadow: 0 14px 32px rgba(232, 185, 77, 0.5);
+}
+
+.partner-featured-label {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: #201a14;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 @media (max-width: 480px) {
   .partner-logo-card {
     width: 140px;
     height: 80px;
     padding: 12px;
+  }
+}
+
+/* Non-compact (Sponsors page / anywhere PartnerLogos renders without
+   `compact`): the featured/main sponsor gets its own wide banner above
+   the regular grid instead of just a bigger grid tile — its logo is an
+   8:1 wide wordmark that reads better as a banner than squeezed into a
+   square-ish card. */
+.partner-logos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.partner-featured-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  padding: 26px 44px;
+  box-shadow: 0 10px 32px rgba(232, 185, 77, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.partner-featured-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 38px rgba(232, 185, 77, 0.5);
+}
+
+.partner-featured-banner img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 480px) {
+  .partner-featured-banner {
+    padding: 20px 24px;
+  }
+
+  .partner-featured-banner img {
+    max-width: 240px;
   }
 }
 
@@ -1227,11 +1309,24 @@ textarea {
   border-radius: 8px;
 }
 
+.partner-logo-grid.compact .partner-logo-card.featured {
+  width: 172px;
+  height: 76px;
+  padding: 10px;
+  border-width: 2px;
+}
+
 @media (max-width: 480px) {
   .partner-logo-grid.compact .partner-logo-card {
     width: 88px;
     height: 46px;
     padding: 6px;
+  }
+
+  .partner-logo-grid.compact .partner-logo-card.featured {
+    width: 130px;
+    height: 60px;
+    padding: 8px;
   }
 }
 

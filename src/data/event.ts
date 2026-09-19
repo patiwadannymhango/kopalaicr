@@ -12,8 +12,8 @@ export const EVENT = {
   isoDate: '2026-10-17T06:00:00',
   venue: 'Nchanga Stadium, Chingola, Copperbelt Province',
   organizer: 'Zambia Athletics',
-  // Published WhatsApp contact line from the live site — not invented.
-  phone: '+260 964 576 875',
+  // Published WhatsApp contact line.
+  phone: '+260 977 719 828',
   // No public email published yet — leave blank rather than invent one.
   // The UI falls back to "Contact details coming soon" wherever this is empty.
   email: '',
@@ -110,7 +110,9 @@ export const SPONSOR_TIERS = [
 export const PARTNER_LOGOS = [
   // lightBg: its brown/navy wordmark is too low-contrast on the site's
   // dark cards, so it gets a white chip instead of the usual dark one.
-  { name: 'Konkola Copper Mines Plc', file: '/logos/kcm.png', lightBg: true },
+  // featured: KCM is the event's main/title sponsor — its card renders
+  // larger than the rest with a "Main Sponsor" badge (see PartnerLogos).
+  { name: 'Konkola Copper Mines Plc', file: '/logos/kcm.png', lightBg: true, featured: true },
   { name: 'Zambia Athletics', file: '/logos/za.png' },
   { name: 'Ministry of Youth, Sport & Arts', file: '/logos/mysa.png' },
   { name: 'National Sports Council of Zambia', file: '/logos/nscz.png' },
