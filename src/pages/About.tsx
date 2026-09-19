@@ -18,7 +18,7 @@ export default function About() {
         <div className="section-inner narrow">
           <Reveal as="div">
             <p className="lede">
-              The {EVENT.shortTitle} is organised by {EVENT.organizer} under the theme "{EVENT.theme}" —{' '}
+              {EVENT.shortTitle} is organised by {EVENT.organizer} under the theme "{EVENT.theme}" —{' '}
               {EVENT.tagline} Companies and institutions field 8-runner relay teams to race the baton over
               10KM, individuals compete solo over 5KM, 10KM or 21KM, executives go head-to-head in the 100m
               CEO and Directors races, and children join in with Kids Athletics.

@@ -1,6 +1,6 @@
 export const EVENT = {
   title: 'KCM Kopala Inter Company Relay 2026',
-  shortTitle: 'Kopala ICR 2026',
+  shortTitle: 'The KCM Kopala ICR 2026',
   motto: 'One Baton. One Team. One Goal.',
   theme: 'Celebrating Corporate Partnerships, Health and Wellness',
   tagline: 'By acting together, we can win.',
