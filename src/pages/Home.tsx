@@ -60,7 +60,7 @@ export default function Home() {
               <Link to="/register" className="btn-primary">
                 Register now
               </Link>
-              <a href="#categories" className="btn-ghost">See race categories</a>
+              <Link to="/categories" className="btn-ghost">See race categories</Link>
               <Link to="/exhibitors" className="btn-vendor">Exhibitor registration</Link>
             </div>
           </div>
