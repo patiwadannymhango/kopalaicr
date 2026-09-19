@@ -66,6 +66,13 @@ export default function Sponsors() {
         <div className="section-inner narrow">
           <h2>Contact the secretariat</h2>
           <p>{EVENT.venue}</p>
+          <p>
+            <strong>Email address:</strong> <a href={`mailto:${EVENT.email}`}>{EVENT.email}</a>
+          </p>
+          <p>
+            <strong>Phone:</strong>{' '}
+            <a href={`tel:${EVENT.contactPhone.replace(/[^\d+]/g, '')}`}>{EVENT.contactPhone}</a>
+          </p>
           {EVENT.phone && (
             <p>
               <a href={`https://wa.me/${EVENT.phone.replace(/[^\d]/g, '')}`} target="_blank" rel="noreferrer">
@@ -73,8 +80,6 @@ export default function Sponsors() {
               </a>
             </p>
           )}
-          {EVENT.email && <p><a href={`mailto:${EVENT.email}`}>{EVENT.email}</a></p>}
-          {!EVENT.phone && !EVENT.email && <p className="hint coming-soon">Contact details coming soon</p>}
         </div>
       </section>
     </main>

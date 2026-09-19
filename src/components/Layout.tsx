@@ -66,13 +66,11 @@ export default function Layout() {
               <div>
                 <span className="footer-label">Contact</span>
                 <span className="footer-text">{EVENT.venue}</span>
-                {EVENT.phone ? (
-                  <a href={`https://wa.me/${EVENT.phone.replace(/[^\d]/g, '')}`} target="_blank" rel="noreferrer">
-                    {EVENT.phone} (WhatsApp)
-                  </a>
-                ) : (
-                  <span className="footer-text">Contact details coming soon</span>
-                )}
+                <a href={`mailto:${EVENT.email}`}>{EVENT.email}</a>
+                <a href={`tel:${EVENT.contactPhone.replace(/[^\d+]/g, '')}`}>{EVENT.contactPhone}</a>
+                <a href={`https://wa.me/${EVENT.phone.replace(/[^\d]/g, '')}`} target="_blank" rel="noreferrer">
+                  {EVENT.phone} (WhatsApp)
+                </a>
               </div>
             </div>
           </div>

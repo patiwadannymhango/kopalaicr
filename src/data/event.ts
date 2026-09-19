@@ -14,9 +14,10 @@ export const EVENT = {
   organizer: 'Zambia Athletics',
   // Published WhatsApp contact line.
   phone: '+260 977 719 828',
-  // No public email published yet — leave blank rather than invent one.
-  // The UI falls back to "Contact details coming soon" wherever this is empty.
-  email: '',
+  // General contact number (calls, not WhatsApp) and email, from the
+  // official event advert/jingle script.
+  contactPhone: '+260 77 660 8981',
+  email: 'intercompanyrelay@gmail.com',
 };
 
 export const RACE_FORMATS = [
