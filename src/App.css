@@ -939,40 +939,89 @@ textarea {
   }
 }
 
-.category-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.category-card {
-  background: var(--surface);
+.pricing-table-wrap {
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 24px;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  border-radius: 14px;
+  overflow: hidden;
+  overflow-x: auto;
+  background: var(--surface);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
 }
 
-.category-card:hover {
-  border-color: var(--copper-bright);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+.pricing-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 14px;
 }
 
-.category-card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 10px;
+.pricing-table thead th {
+  text-align: left;
+  padding: 16px 22px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.category-card-head h2 {
-  font-size: 21px;
+.pricing-table tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background 0.2s ease;
 }
 
-.category-card .race-row-fee {
+.pricing-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.pricing-table tbody tr:hover {
+  background: var(--cream);
+}
+
+.pricing-table td {
+  padding: 20px 22px;
+  vertical-align: top;
+}
+
+.pricing-table-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pricing-table-detail {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 380px;
+}
+
+.pricing-table-divisions-col {
+  width: 30%;
+}
+
+.pricing-table-dash {
+  color: var(--muted);
+}
+
+.pricing-table-fee-col {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pricing-table-fee {
   font-size: 22px;
   font-weight: 800;
+  color: var(--copper);
+}
+
+@media (max-width: 720px) {
+  .pricing-table-detail {
+    max-width: none;
+  }
 }
 
 .tag-list {
@@ -1068,10 +1117,6 @@ textarea {
   }
   .race-row-fee {
     text-align: left;
-  }
-  .category-card-head {
-    flex-direction: column;
-    gap: 4px;
   }
 }
 

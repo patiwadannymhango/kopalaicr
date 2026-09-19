@@ -25,13 +25,57 @@ export default function Categories() {
     return price > 0 ? price : DEFAULT_ENTRY_FEE;
   }
 
-  const relayFee = feeFor(relayCategories, 'relay');
-  const fiveKmFee = feeFor(individualCategories, '5km-individual');
-  const individualFee = feeFor(individualCategories, '10km-individual');
-  const halfMarathonFee = feeFor(individualCategories, '21km-individual');
-  const ceoRaceFee = feeFor(individualCategories, '100m-ceo');
-  const directorsRaceFee = feeFor(individualCategories, '100m-directors');
-  const kidsFee = feeFor(individualCategories, 'kids-athletics');
+  const rows = [
+    {
+      key: 'relay',
+      name: '10KM Corporate Relay',
+      detail: `Teams of ${RELAY_TEAM_SIZE} runners share the baton over the full 10KM course — one entry fee covers the whole team.`,
+      tags: RELAY_CATEGORIES.map((c) => c.label),
+      fee: feeFor(relayCategories, 'relay'),
+    },
+    {
+      key: '5km',
+      name: '5KM Individual Race & Walk',
+      detail: 'Race it or walk it over 5KM — an easier distance for first-timers and casual runners.',
+      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
+      fee: feeFor(individualCategories, '5km-individual'),
+    },
+    {
+      key: '10km',
+      name: '10KM Individual Race',
+      detail: 'Race the 10KM course solo — for competitive and recreational runners alike.',
+      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
+      fee: feeFor(individualCategories, '10km-individual'),
+    },
+    {
+      key: '21km',
+      name: '21KM Individual Race & Walk',
+      detail: 'Take on the half-marathon distance — race it competitively or walk it at your own pace.',
+      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
+      fee: feeFor(individualCategories, '21km-individual'),
+    },
+    {
+      key: 'ceo',
+      name: '100m CEO Race',
+      detail: 'A fast, fun sprint reserved for company chief executives — bragging rights on the line.',
+      tags: [] as string[],
+      fee: feeFor(individualCategories, '100m-ceo'),
+    },
+    {
+      key: 'directors',
+      name: '100m Directors Race',
+      detail: 'A fast, fun sprint for company directors and senior leadership.',
+      tags: [] as string[],
+      fee: feeFor(individualCategories, '100m-directors'),
+    },
+    {
+      key: 'kids',
+      name: 'Kids Athletics',
+      detail: 'Fun athletics activities for children — open to families joining us on race day.',
+      tags: [] as string[],
+      fee: feeFor(individualCategories, 'kids-athletics'),
+    },
+  ];
 
   return (
     <main>
@@ -49,85 +93,40 @@ export default function Categories() {
           {loading ? (
             <p className="hint"><Spinner size={13} /> Loading fees…</p>
           ) : (
-            <Reveal as="div" className="category-cards">
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>10KM Corporate Relay</h2>
-                  <span className="race-row-fee">{`K${relayFee}`}</span>
-                </div>
-                <p>
-                  Companies and institutions field teams of {RELAY_TEAM_SIZE} runners who share the baton
-                  over the full 10KM course. One entry fee covers the whole team.
-                </p>
-                <ul className="tag-list">
-                  {RELAY_CATEGORIES.map((c) => (
-                    <li key={c.value}>{c.label}</li>
+            <Reveal as="div" className="pricing-table-wrap">
+              <table className="pricing-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th className="pricing-table-divisions-col">Divisions</th>
+                    <th className="pricing-table-fee-col">Entry fee</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.key}>
+                      <td>
+                        <div className="pricing-table-name">{r.name}</div>
+                        <div className="pricing-table-detail">{r.detail}</div>
+                      </td>
+                      <td className="pricing-table-divisions-col">
+                        {r.tags.length ? (
+                          <ul className="tag-list">
+                            {r.tags.map((t) => (
+                              <li key={t}>{t}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span className="pricing-table-dash">—</span>
+                        )}
+                      </td>
+                      <td className="pricing-table-fee-col">
+                        <span className="pricing-table-fee">{`K${r.fee}`}</span>
+                      </td>
+                    </tr>
                   ))}
-                </ul>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>5KM Individual Race &amp; Walk</h2>
-                  <span className="race-row-fee">{`K${fiveKmFee}`}</span>
-                </div>
-                <p>Race it or walk it over 5KM — an easier distance for first-timers and casual runners.</p>
-                <ul className="tag-list">
-                  {INDIVIDUAL_DIVISIONS.map((d) => (
-                    <li key={d.value}>{d.label}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>10KM Individual Race</h2>
-                  <span className="race-row-fee">{`K${individualFee}`}</span>
-                </div>
-                <p>Race the 10KM course solo — for competitive and recreational runners alike.</p>
-                <ul className="tag-list">
-                  {INDIVIDUAL_DIVISIONS.map((d) => (
-                    <li key={d.value}>{d.label}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>21KM Individual Race &amp; Walk</h2>
-                  <span className="race-row-fee">{`K${halfMarathonFee}`}</span>
-                </div>
-                <p>Take on the half-marathon distance — race it competitively or walk it at your own pace.</p>
-                <ul className="tag-list">
-                  {INDIVIDUAL_DIVISIONS.map((d) => (
-                    <li key={d.value}>{d.label}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>100m CEO Race</h2>
-                  <span className="race-row-fee">{`K${ceoRaceFee}`}</span>
-                </div>
-                <p>A fast, fun sprint reserved for company chief executives — bragging rights on the line.</p>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>100m Directors Race</h2>
-                  <span className="race-row-fee">{`K${directorsRaceFee}`}</span>
-                </div>
-                <p>A fast, fun sprint for company directors and senior leadership.</p>
-              </div>
-
-              <div className="category-card">
-                <div className="category-card-head">
-                  <h2>Kids Athletics</h2>
-                  <span className="race-row-fee">{`K${kidsFee}`}</span>
-                </div>
-                <p>Fun athletics activities for children — open to families joining us on race day.</p>
-              </div>
+                </tbody>
+              </table>
             </Reveal>
           )}
         </div>
