@@ -61,7 +61,7 @@ export default function Home() {
           </div>
 
           <div className="race-table">
-            {RACE_FORMATS.map((d) => {
+            {RACE_FORMATS.slice(0, 3).map((d) => {
               const fee = feeFor(d.categoryCode);
               return (
                 <Link key={d.categoryCode} to="/categories" className="race-row">
