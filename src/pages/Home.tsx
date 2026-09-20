@@ -20,6 +20,11 @@ export default function Home() {
     fetchRelayCategories().then(setRelayCategories).catch(() => setRelayCategories([]));
   }, []);
 
+  // Real prices haven't arrived from the backend yet — show a loading
+  // placeholder instead of DEFAULT_ENTRY_FEE below, which would
+  // otherwise flash a wrong "K2" for every category on first paint.
+  const pricesLoading = individualCategories === null || relayCategories === null;
+
   function feeFor(code: string): number {
     const source = code === 'relay' ? relayCategories : individualCategories;
     const category = source?.find((c) => c.code === code);
@@ -86,7 +91,9 @@ export default function Home() {
                   <div className="pricing-grid-name">
                     {d.code} {d.label}
                   </div>
-                  <div className="pricing-grid-fee">{`K${feeFor(d.categoryCode)}`}</div>
+                  <div className="pricing-grid-fee">
+                    {pricesLoading ? <span className="price-skeleton" aria-hidden="true" /> : `K${feeFor(d.categoryCode)}`}
+                  </div>
                 </div>
               ))}
               {Array.from({ length: (4 - (RACE_FORMATS.length % 4)) % 4 }).map((_, i) => (
