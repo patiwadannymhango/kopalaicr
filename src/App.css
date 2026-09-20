@@ -1152,6 +1152,34 @@ textarea {
   padding: 28px 20px;
 }
 
+.sponsor-card-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.sponsor-card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.sponsor-card-logo.light-bg {
+  background: #ffffff;
+}
+
+.sponsor-card-logo img {
+  max-height: 100%;
+  max-width: 100px;
+  object-fit: contain;
+}
+
 .sponsor-name {
   font-weight: 600;
   font-size: 14px;

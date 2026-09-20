@@ -37,6 +37,15 @@ export default function Sponsors() {
           <div className="sponsor-grid">
             {SPONSOR_TIERS.map((s, i) => (
               <Reveal as="div" key={s.name} delay={i * 60} className="sponsor-card tier-card">
+                {s.logos && (
+                  <div className="sponsor-card-logos">
+                    {s.logos.map((logo) => (
+                      <div key={logo.file} className={`sponsor-card-logo${logo.lightBg ? ' light-bg' : ''}`}>
+                        <img src={logo.file} alt="" loading="lazy" />
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="sponsor-name">{s.name}</div>
                 <div className="sponsor-tier">{s.tier}</div>
               </Reveal>

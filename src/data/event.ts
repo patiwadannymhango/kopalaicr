@@ -90,19 +90,29 @@ export const INCLUSIONS = [
   'Participation certificate',
 ];
 
-/** No sponsors have signed on publicly yet — the real site shows tier
- * categories rather than logos, so this does the same instead of
- * inventing company names. Once real sponsors are confirmed, give each
- * tier a `sponsors: string[]`. */
+/** Most tiers are still unconfirmed paid sponsorship slots, so this
+ * shows the tier category rather than inventing a company name — but
+ * two tiers already have a confirmed sponsor, shown via `logos`. */
 export const SPONSOR_TIERS = [
-  { name: 'Platinum Sponsor', tier: 'Presenting partner' },
+  {
+    name: 'Platinum Sponsor',
+    tier: 'Presenting partner',
+    logos: [{ file: '/logos/kcm.png', lightBg: true }],
+  },
   { name: 'Gold Sponsor', tier: 'Major partner' },
   { name: 'Silver Sponsor', tier: 'Supporting partner' },
   { name: 'Bronze Sponsor', tier: 'Contributing partner' },
   { name: 'Official Partner', tier: 'Event partner' },
   { name: 'Media Partner', tier: 'Coverage partner' },
   { name: 'Medical Partner', tier: 'Safety partner' },
-  { name: 'Hydration Partner', tier: 'Wellness partner' },
+  {
+    name: 'Hydration Partner',
+    tier: 'Wellness partner',
+    logos: [
+      { file: '/logos/fit.png', lightBg: false },
+      { file: '/logos/vatra.png', lightBg: false },
+    ],
+  },
 ];
 
 /** Confirmed official partners/organisers — distinct from SPONSOR_TIERS
