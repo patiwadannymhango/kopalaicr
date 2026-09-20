@@ -7,7 +7,7 @@ export interface GalleryImage {
 
 /** Photos live in public/gallery/, pre-resized and compressed (full: max
  * 1600px wide; thumb: 640x640 cropped) from the source WhatsApp exports. */
-export const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 29 }, (_, i) => {
+export const GALLERY_IMAGES: GalleryImage[] = Array.from({ length: 38 }, (_, i) => {
   const num = String(i + 1).padStart(2, '0');
   return {
     id: num,
