@@ -60,7 +60,7 @@ export const RACE_FORMATS = [
   {
     code: 'KIDS',
     categoryCode: 'kids-athletics',
-    label: 'Kids Athletics',
+    label: 'Athletics',
     detail: 'Fun athletics activities for children on race day',
   },
 ];
