@@ -71,7 +71,6 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     add('Phone', d.phone);
     add('Gender', GENDER_LABEL[d.gender] ?? '');
     add('Age range', AGE_LABEL[d.ageRange] ?? '');
-    add('T-shirt size', d.tShirtSize);
     add('Club / institution', d.clubOrInstitution);
     add('Emergency contact', d.emergencyContactName);
     add('Emergency phone', d.emergencyContactPhone);

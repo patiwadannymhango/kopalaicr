@@ -24,7 +24,6 @@ const initialDetails: IndividualDetails = {
   gender: '',
   ageRange: '',
   country: 'Zambia',
-  tShirtSize: '',
   raceCategory: '',
   division: '',
   townOrCity: '',
@@ -279,14 +278,6 @@ export default function IndividualRegistration() {
                 <option value="40-49">40–49</option>
                 <option value="50-59">50–59</option>
                 <option value="60+">60+</option>
-              </select>
-            </Field>
-            <Field label="T-shirt size">
-              <select value={details.tShirtSize} onChange={(e) => update('tShirtSize', e.target.value as IndividualDetails['tShirtSize'])}>
-                <option value="">Select</option>
-                {['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'].map((sz) => (
-                  <option key={sz} value={sz}>{sz}</option>
-                ))}
               </select>
             </Field>
             <Field label="Race" required>

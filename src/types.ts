@@ -58,7 +58,6 @@ export const VENDOR_REQUIREMENTS: { value: VendorRequirement; label: string }[] 
 
 export type Gender = '' | 'male' | 'female';
 export type AgeRange = '' | 'Under 18' | '18-29' | '30-39' | '40-49' | '50-59' | '60+';
-export type TShirtSize = '' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL' | '4XL' | '5XL';
 export type PaymentMethod = 'mobile-money' | 'card' | 'bank-transfer';
 export type MobileMoneyProvider = '' | 'MTN_MONEY' | 'AIRTEL_MONEY' | 'ZAMTEL_KWACHA';
 export type RegistrationStatus = 'confirmed' | 'pending-bank-transfer' | 'processing' | 'failed';
@@ -72,7 +71,6 @@ export interface IndividualDetails {
   gender: Gender;
   ageRange: AgeRange;
   country: string;
-  tShirtSize: TShirtSize;
   raceCategory: RaceCategory;
   division: IndividualDivision;
   townOrCity: string;
