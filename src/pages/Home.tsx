@@ -67,7 +67,10 @@ export default function Home() {
         <div className="hero-inner hero-grid">
           <div className="hero-main">
             <Reveal as="div">
-              <div className="eyebrow eyebrow-lg">{EVENT.date} · {EVENT.venue}</div>
+              <div className="hero-date-row">
+                <span className="hero-date">{EVENT.date}</span>
+                <span className="hero-venue">{EVENT.venue}</span>
+              </div>
               <h1>{EVENT.motto}</h1>
               <p className="lede hero-lede">
                 {EVENT.theme} — {EVENT.tagline} Join companies and institutions from across the Copperbelt and
