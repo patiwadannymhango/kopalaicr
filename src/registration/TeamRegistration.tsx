@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, RunnerRosterEntry, TeamDetails } from '../types';
+import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, TeamDetails } from '../types';
 import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
@@ -80,22 +80,6 @@ export default function TeamRegistration() {
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
-  }
-
-  function updateRunner(index: number, patch: Partial<RunnerRosterEntry>) {
-    setDetails((d) => ({
-      ...d,
-      roster: d.roster.map((r, i) => (i === index ? { ...r, ...patch } : r)),
-    }));
-  }
-
-  function addRunner() {
-    if (details.roster.length >= RELAY_TEAM_SIZE) return;
-    setDetails((d) => ({ ...d, roster: [...d.roster, { fullName: '', gender: '' }] }));
-  }
-
-  function removeRunner(index: number) {
-    setDetails((d) => ({ ...d, roster: d.roster.filter((_, i) => i !== index) }));
   }
 
   function handleDetailsContinue() {
@@ -293,44 +277,6 @@ export default function TeamRegistration() {
             <Field label="Captain phone" required>
               <input value={details.captainPhone} onChange={(e) => update('captainPhone', e.target.value)} placeholder="e.g. 097 000 0000" />
             </Field>
-          </div>
-
-          <div className="roster">
-            <div className="roster-head">
-              <span className="field-label">
-                Runner roster <span className="optional">optional — add now or later</span>
-              </span>
-              <span className="roster-count">{details.roster.length} of {RELAY_TEAM_SIZE} included</span>
-            </div>
-            <p className="hint">
-              One entry fee covers up to {RELAY_TEAM_SIZE} runners. Add them now if you know your full squad, or
-              leave this for later and send the names through to the organisers before race day.
-            </p>
-
-            {details.roster.map((runner, i) => (
-              <div className="roster-row" key={i}>
-                <span className="roster-row-num">{i + 1}</span>
-                <input
-                  value={runner.fullName}
-                  onChange={(e) => updateRunner(i, { fullName: e.target.value })}
-                  placeholder="Runner full name"
-                />
-                <select value={runner.gender} onChange={(e) => updateRunner(i, { gender: e.target.value as RunnerRosterEntry['gender'] })}>
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-                <button type="button" className="roster-remove" onClick={() => removeRunner(i)} aria-label={`Remove runner ${i + 1}`}>
-                  ×
-                </button>
-              </div>
-            ))}
-
-            {details.roster.length < RELAY_TEAM_SIZE && (
-              <button type="button" className="btn-ghost btn-full" onClick={addRunner}>
-                + Add runner
-              </button>
-            )}
           </div>
 
           <label className="checkbox-row">
