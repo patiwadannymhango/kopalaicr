@@ -228,21 +228,21 @@ export default function BulkIndividualRegistrationModal({
           <table className="bulk-table">
             <thead>
               <tr>
-                <th className="bulk-col-num">#</th>
-                <th className="bulk-col-primary">Full name *</th>
-                <th className="bulk-col-primary">Email *</th>
-                <th className="bulk-col-primary">Phone *</th>
-                <th className="bulk-col-race">Race *</th>
+                <th>#</th>
+                <th>Full name *</th>
+                <th>Email *</th>
+                <th>Phone *</th>
+                <th>Race *</th>
                 <th>Gender</th>
                 <th>Age range</th>
                 <th>Country</th>
                 <th>Town / City</th>
-                <th className="bulk-col-minor">Club / institution</th>
-                <th className="bulk-col-minor">Emergency contact name</th>
-                <th className="bulk-col-minor">Emergency contact phone *</th>
-                <th className="bulk-col-minor">Medical notes</th>
+                <th>Club / institution</th>
+                <th>Emergency contact name</th>
+                <th>Emergency contact phone *</th>
+                <th>Medical notes</th>
                 <th>Fee</th>
-                <th className="bulk-col-remove" aria-hidden="true"></th>
+                <th aria-hidden="true"></th>
               </tr>
             </thead>
             <tbody>
@@ -251,7 +251,7 @@ export default function BulkIndividualRegistrationModal({
                   <td className="bulk-table-num">{i + 1}</td>
                   <td>
                     <input
-                      className={`bulk-col-primary ${row.errors?.fullName ? 'has-error' : ''}`.trim()}
+                      className={row.errors?.fullName ? 'has-error' : ''}
                       title={row.errors?.fullName}
                       value={row.fullName}
                       onChange={(e) => updateRow(row.id, 'fullName', e.target.value)}
@@ -260,7 +260,7 @@ export default function BulkIndividualRegistrationModal({
                   <td>
                     <input
                       type="email"
-                      className={`bulk-col-primary ${row.errors?.email ? 'has-error' : ''}`.trim()}
+                      className={row.errors?.email ? 'has-error' : ''}
                       title={row.errors?.email}
                       value={row.email}
                       onChange={(e) => updateRow(row.id, 'email', e.target.value)}
@@ -268,7 +268,7 @@ export default function BulkIndividualRegistrationModal({
                   </td>
                   <td>
                     <input
-                      className={`bulk-col-primary ${row.errors?.phone ? 'has-error' : ''}`.trim()}
+                      className={row.errors?.phone ? 'has-error' : ''}
                       title={row.errors?.phone}
                       value={row.phone}
                       onChange={(e) => updateRow(row.id, 'phone', e.target.value)}
@@ -276,7 +276,7 @@ export default function BulkIndividualRegistrationModal({
                   </td>
                   <td>
                     <select
-                      className={`bulk-col-race ${row.errors?.raceCategory ? 'has-error' : ''}`.trim()}
+                      className={row.errors?.raceCategory ? 'has-error' : ''}
                       title={row.errors?.raceCategory}
                       value={row.raceCategory}
                       onChange={(e) => updateRow(row.id, 'raceCategory', e.target.value as BulkMemberRow['raceCategory'])}
@@ -316,21 +316,19 @@ export default function BulkIndividualRegistrationModal({
                   </td>
                   <td>
                     <input
-                      className="bulk-col-minor"
                       value={row.clubOrInstitution}
                       onChange={(e) => updateRow(row.id, 'clubOrInstitution', e.target.value)}
                     />
                   </td>
                   <td>
                     <input
-                      className="bulk-col-minor"
                       value={row.emergencyContactName}
                       onChange={(e) => updateRow(row.id, 'emergencyContactName', e.target.value)}
                     />
                   </td>
                   <td>
                     <input
-                      className={`bulk-col-minor ${row.errors?.emergencyContactPhone ? 'has-error' : ''}`.trim()}
+                      className={row.errors?.emergencyContactPhone ? 'has-error' : ''}
                       title={row.errors?.emergencyContactPhone}
                       value={row.emergencyContactPhone}
                       onChange={(e) => updateRow(row.id, 'emergencyContactPhone', e.target.value)}
@@ -338,7 +336,6 @@ export default function BulkIndividualRegistrationModal({
                   </td>
                   <td>
                     <input
-                      className="bulk-col-minor"
                       value={row.medicalNotes}
                       onChange={(e) => updateRow(row.id, 'medicalNotes', e.target.value)}
                     />
