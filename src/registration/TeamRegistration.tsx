@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, RunnerRosterEntry, TeamDetails } from '../types';
-import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
+import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, TeamDetails } from '../types';
+import { RELAY_CATEGORIES } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
@@ -20,6 +20,7 @@ const initialDetails: TeamDetails = {
   captainLastName: '',
   captainEmail: '',
   captainPhone: '',
+  participantCount: '',
   roster: [],
   acceptedTerms: false,
 };
@@ -82,33 +83,20 @@ export default function TeamRegistration() {
     setDetails((d) => ({ ...d, [key]: value }));
   }
 
-  function updateRunner(index: number, patch: Partial<RunnerRosterEntry>) {
-    setDetails((d) => ({
-      ...d,
-      roster: d.roster.map((r, i) => (i === index ? { ...r, ...patch } : r)),
-    }));
-  }
-
-  function addRunner() {
-    if (details.roster.length >= RELAY_TEAM_SIZE) return;
-    setDetails((d) => ({ ...d, roster: [...d.roster, { fullName: '', gender: '' }] }));
-  }
-
-  function removeRunner(index: number) {
-    setDetails((d) => ({ ...d, roster: d.roster.filter((_, i) => i !== index) }));
-  }
-
   function handleDetailsContinue() {
     if (
       !details.teamName ||
-      !details.companyOrInstitution ||
       !details.relayCategory ||
       !details.captainFirstName ||
       !details.captainLastName ||
       !details.captainEmail ||
       !details.captainPhone
     ) {
-      setError('Please fill in the team name, company, category and captain details.');
+      setError('Please fill in the organization, category and captain details.');
+      return;
+    }
+    if (!details.participantCount || Number(details.participantCount) < 1) {
+      setError('Please enter the number of participants.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -250,14 +238,15 @@ export default function TeamRegistration() {
 
       {step === 'details' && (
         <>
-          <p className="hint">One entry fee covers the full {RELAY_TEAM_SIZE}-runner team.</p>
-
           <div className="grid-2">
-            <Field label="Team name" required>
-              <input value={details.teamName} onChange={(e) => update('teamName', e.target.value)} placeholder="e.g. Kansanshi Runners" />
-            </Field>
-            <Field label="Company / institution" required>
-              <input value={details.companyOrInstitution} onChange={(e) => update('companyOrInstitution', e.target.value)} />
+            <Field label="Organization / Club" required>
+              <input
+                value={details.teamName}
+                onChange={(e) =>
+                  setDetails((d) => ({ ...d, teamName: e.target.value, companyOrInstitution: e.target.value }))
+                }
+                placeholder="e.g. Kansanshi Runners"
+              />
             </Field>
             <Field label="Relay category" required>
               <select value={details.relayCategory} onChange={(e) => update('relayCategory', e.target.value as TeamDetails['relayCategory'])}>
@@ -266,6 +255,15 @@ export default function TeamRegistration() {
                   <option key={c.value} value={c.value}>{c.label}</option>
                 ))}
               </select>
+            </Field>
+            <Field label="Number of participants" required>
+              <input
+                type="number"
+                min={1}
+                value={details.participantCount}
+                onChange={(e) => update('participantCount', e.target.value)}
+                placeholder="e.g. 10"
+              />
             </Field>
           </div>
 
@@ -295,44 +293,6 @@ export default function TeamRegistration() {
             </Field>
           </div>
 
-          <div className="roster">
-            <div className="roster-head">
-              <span className="field-label">
-                Runner roster <span className="optional">optional — add now or later</span>
-              </span>
-              <span className="roster-count">{details.roster.length} of {RELAY_TEAM_SIZE} included</span>
-            </div>
-            <p className="hint">
-              One entry fee covers up to {RELAY_TEAM_SIZE} runners. Add them now if you know your full squad, or
-              leave this for later and send the names through to the organisers before race day.
-            </p>
-
-            {details.roster.map((runner, i) => (
-              <div className="roster-row" key={i}>
-                <span className="roster-row-num">{i + 1}</span>
-                <input
-                  value={runner.fullName}
-                  onChange={(e) => updateRunner(i, { fullName: e.target.value })}
-                  placeholder="Runner full name"
-                />
-                <select value={runner.gender} onChange={(e) => updateRunner(i, { gender: e.target.value as RunnerRosterEntry['gender'] })}>
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-                <button type="button" className="roster-remove" onClick={() => removeRunner(i)} aria-label={`Remove runner ${i + 1}`}>
-                  ×
-                </button>
-              </div>
-            ))}
-
-            {details.roster.length < RELAY_TEAM_SIZE && (
-              <button type="button" className="btn-ghost btn-full" onClick={addRunner}>
-                + Add runner
-              </button>
-            )}
-          </div>
-
           <label className="checkbox-row">
             <input type="checkbox" checked={details.acceptedTerms} onChange={(e) => update('acceptedTerms', e.target.checked)} />
             I confirm the team details are correct and accept the event terms and indemnity on behalf of the team.
@@ -351,6 +311,10 @@ export default function TeamRegistration() {
           <div className="summary-row">
             <span>Category</span>
             <strong>{selectedCategory?.name ?? RELAY_CATEGORIES.find((c) => c.value === details.relayCategory)?.label ?? '—'}</strong>
+          </div>
+          <div className="summary-row">
+            <span>Participants</span>
+            <strong>{details.participantCount || '—'}</strong>
           </div>
           <div className="summary-row">
             <span>Entry fee — full team</span>

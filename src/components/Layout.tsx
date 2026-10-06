@@ -2,8 +2,12 @@ import { NavLink, Outlet, Link } from 'react-router-dom';
 import { EVENT } from '../data/event';
 import PartnerLogos from './PartnerLogos';
 import WhatsAppButton from './WhatsAppButton';
+import RegistrationModal from './RegistrationModal';
+import { RegistrationModalProvider, useRegistrationModal } from '../context/RegistrationModalContext';
 
-export default function Layout() {
+function LayoutInner() {
+  const { open } = useRegistrationModal();
+
   return (
     <div className="site">
       <header className="site-header">
@@ -21,9 +25,9 @@ export default function Layout() {
             <NavLink to="/gallery">Gallery 2025</NavLink>
           </nav>
           <div className="site-header-actions">
-            <Link to="/register" className="btn-primary btn-sm">
+            <button type="button" className="btn-primary btn-sm" onClick={() => open()}>
               Register
-            </Link>
+            </button>
             <Link to="/exhibitors" className="btn-vendor btn-sm">
               Exhibitor registration
             </Link>
@@ -57,10 +61,10 @@ export default function Layout() {
               </div>
               <div>
                 <span className="footer-label">Register</span>
-                <Link to="/register">Team / relay entry</Link>
-                <Link to="/register">Individual entry</Link>
+                <button type="button" onClick={() => open('team')}>Group Registration</button>
+                <button type="button" onClick={() => open('individual')}>Individual entry</button>
                 <Link to="/exhibitors">Exhibitor entry</Link>
-                <a href="/register#track">Track registration</a>
+                <a href="/#track">Track registration</a>
               </div>
               <div>
                 <span className="footer-label">About</span>
@@ -86,6 +90,15 @@ export default function Layout() {
       </footer>
 
       <WhatsAppButton />
+      <RegistrationModal />
     </div>
+  );
+}
+
+export default function Layout() {
+  return (
+    <RegistrationModalProvider>
+      <LayoutInner />
+    </RegistrationModalProvider>
   );
 }
