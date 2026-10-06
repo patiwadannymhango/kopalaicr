@@ -2,8 +2,8 @@ import type { TeamDetails } from '../types';
 import { apiFetch } from './http';
 import type { BackendCategory, SubmitRegistrationResult } from './individualApi';
 
-/** Fetch the 10KM Corporate Relay categories (Men's/Women's/Mixed Team)
- * with the per-team entry fee — one fee covers the full 8-runner team. */
+/** Fetch every group/relay race category (5KM/10KM/21KM Corporate Relay,
+ * 100M CEO/Directors, Kids Athletics) with its flat per-group entry fee. */
 export async function fetchRelayCategories(): Promise<BackendCategory[]> {
   return apiFetch<BackendCategory[]>('/registrations/team/categories/');
 }

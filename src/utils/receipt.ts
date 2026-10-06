@@ -54,6 +54,8 @@ function buildRows(record: RegistrationRecord): [string, string][] {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
     add('Organization | Club', d.teamName || d.companyOrInstitution);
+    add('Race Category', d.raceCategoryName);
+    add('Number of participants', d.participantCount ? `${d.participantCount}` : '');
     add('Captain', `${d.captainFirstName} ${d.captainLastName}`.trim());
     add('Captain email', d.captainEmail);
     add('Captain phone', d.captainPhone);

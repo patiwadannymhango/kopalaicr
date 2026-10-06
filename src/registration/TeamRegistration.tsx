@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, TeamDetails } from '../types';
-import { RELAY_CATEGORIES } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
@@ -15,11 +14,13 @@ import { downloadReceipt } from '../utils/receipt';
 const initialDetails: TeamDetails = {
   teamName: '',
   companyOrInstitution: '',
-  relayCategory: '',
+  raceCategory: '',
+  raceCategoryName: '',
   captainFirstName: '',
   captainLastName: '',
   captainEmail: '',
   captainPhone: '',
+  participantCount: '',
   roster: [],
   acceptedTerms: false,
 };
@@ -71,28 +72,33 @@ export default function TeamRegistration() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // The relay has a single per-team entry fee regardless of which
-  // category (Men's/Women's/Mixed) the team races in, so the fee always
-  // comes from the one 'relay' category — matching how Home and
-  // Categories look it up.
-  const selectedCategory = categories?.find((c) => c.code === 'relay');
-  const fee = details.relayCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
+  const selectedCategory = categories?.find((c) => c.code === details.raceCategory);
+  const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
   }
 
+  function handleCategoryChange(code: string) {
+    const category = categories?.find((c) => c.code === code);
+    setDetails((d) => ({ ...d, raceCategory: code, raceCategoryName: category?.name ?? '' }));
+  }
+
   function handleDetailsContinue() {
+    const participantCount = Number(details.participantCount);
     if (
       !details.teamName ||
       !details.companyOrInstitution ||
-      !details.relayCategory ||
+      !details.raceCategory ||
+      !details.participantCount ||
+      !Number.isInteger(participantCount) ||
+      participantCount < 1 ||
       !details.captainFirstName ||
       !details.captainLastName ||
       !details.captainEmail ||
       !details.captainPhone
     ) {
-      setError('Please fill in the organization, category and captain details.');
+      setError('Please fill in the organization, race category, number of participants and captain details.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -244,19 +250,28 @@ export default function TeamRegistration() {
                 placeholder="e.g. Kansanshi Runners"
               />
             </Field>
-            <Field label="Relay category" required>
-              <select value={details.relayCategory} onChange={(e) => update('relayCategory', e.target.value as TeamDetails['relayCategory'])}>
+            <Field label="Race Category" required>
+              <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
                 <option value="">Select category</option>
-                {RELAY_CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                {categories?.map((c) => (
+                  <option key={c.code} value={c.code}>{c.name}</option>
                 ))}
               </select>
             </Field>
+            <Field label="Number of participants" required>
+              <input
+                type="number"
+                min={1}
+                value={details.participantCount}
+                onChange={(e) => update('participantCount', e.target.value)}
+                placeholder="e.g. 8"
+              />
+            </Field>
           </div>
 
-          {details.relayCategory && (
+          {details.raceCategory && (
             <div className="fee-preview">
-              <span>Entry fee — full team</span>
+              <span>Entry fee for {details.raceCategoryName}</span>
               {categories === null ? (
                 <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
               ) : (
@@ -297,10 +312,14 @@ export default function TeamRegistration() {
         <>
           <div className="summary-row">
             <span>Category</span>
-            <strong>{selectedCategory?.name ?? RELAY_CATEGORIES.find((c) => c.value === details.relayCategory)?.label ?? '—'}</strong>
+            <strong>{selectedCategory?.name ?? details.raceCategoryName ?? '—'}</strong>
           </div>
           <div className="summary-row">
-            <span>Entry fee — full team</span>
+            <span>Participants</span>
+            <strong>{details.participantCount}</strong>
+          </div>
+          <div className="summary-row">
+            <span>Entry fee</span>
             <strong className="fee-highlight">{`K${(fee ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
           </div>
 

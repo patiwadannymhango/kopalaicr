@@ -16,14 +16,6 @@ export const RACE_CATEGORIES: { value: RaceCategory; label: string; distance: st
   { value: 'kids-athletics', label: 'Kids Athletics', distance: 'Fun run' },
 ];
 
-export type RelayCategory = '' | 'mens-team' | 'womens-team' | 'mixed-team';
-
-export const RELAY_CATEGORIES: { value: RelayCategory; label: string }[] = [
-  { value: 'mens-team', label: "Men's Team" },
-  { value: 'womens-team', label: "Women's Team" },
-  { value: 'mixed-team', label: 'Mixed Team' },
-];
-
 export const RELAY_TEAM_SIZE = 8;
 
 export type VendorRequirement =
@@ -110,11 +102,18 @@ export interface RunnerRosterEntry {
 export interface TeamDetails {
   teamName: string;
   companyOrInstitution: string;
-  relayCategory: RelayCategory;
+  raceCategory: string; // backend Category code (5km-corporate-relay, relay, 100m-ceo-relay, ...)
+  /** Display name for `raceCategory` (e.g. "10KM Corporate Relay") — team
+   * race categories are entirely backend-driven, like VendorDetails.category,
+   * so there's no static list to resolve this from later. Set when the
+   * category is chosen; ignored by the backend (extra JSON fields are
+   * simply dropped by the serializer). */
+  raceCategoryName: string;
   captainFirstName: string;
   captainLastName: string;
   captainEmail: string;
   captainPhone: string;
+  participantCount: string;
   roster: RunnerRosterEntry[];
   acceptedTerms: boolean;
 }

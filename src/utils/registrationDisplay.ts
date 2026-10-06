@@ -1,5 +1,5 @@
 import type { IndividualBatchDetails, IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
-import { RACE_CATEGORIES, RELAY_CATEGORIES } from '../types';
+import { RACE_CATEGORIES } from '../types';
 
 const STATUS_LABEL: Record<string, string> = {
   confirmed: 'Confirmed',
@@ -36,8 +36,7 @@ export function displayName(record: RegistrationRecord): string {
 export function categoryLabel(record: RegistrationRecord): string {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
-    const category = RELAY_CATEGORIES.find((c) => c.value === d.relayCategory);
-    return category ? `10KM Corporate Relay — ${category.label}` : '10KM Corporate Relay';
+    return d.raceCategoryName || '';
   }
   if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;
