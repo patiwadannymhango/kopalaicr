@@ -86,14 +86,13 @@ export default function TeamRegistration() {
   function handleDetailsContinue() {
     if (
       !details.teamName ||
-      !details.companyOrInstitution ||
       !details.relayCategory ||
       !details.captainFirstName ||
       !details.captainLastName ||
       !details.captainEmail ||
       !details.captainPhone
     ) {
-      setError('Please fill in the team name, company, category and captain details.');
+      setError('Please fill in the organization, category and captain details.');
       return;
     }
     if (!details.participantCount || Number(details.participantCount) < 1) {
@@ -240,11 +239,14 @@ export default function TeamRegistration() {
       {step === 'details' && (
         <>
           <div className="grid-2">
-            <Field label="Team name" required>
-              <input value={details.teamName} onChange={(e) => update('teamName', e.target.value)} placeholder="e.g. Kansanshi Runners" />
-            </Field>
-            <Field label="Company / institution" required>
-              <input value={details.companyOrInstitution} onChange={(e) => update('companyOrInstitution', e.target.value)} />
+            <Field label="Organization / Club" required>
+              <input
+                value={details.teamName}
+                onChange={(e) =>
+                  setDetails((d) => ({ ...d, teamName: e.target.value, companyOrInstitution: e.target.value }))
+                }
+                placeholder="e.g. Kansanshi Runners"
+              />
             </Field>
             <Field label="Relay category" required>
               <select value={details.relayCategory} onChange={(e) => update('relayCategory', e.target.value as TeamDetails['relayCategory'])}>
