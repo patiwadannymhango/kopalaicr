@@ -1917,6 +1917,7 @@ textarea {
   padding: 6px;
   border-top: 1px solid var(--line);
   vertical-align: middle;
+  position: relative;
 }
 
 .bulk-table input,
@@ -1925,11 +1926,24 @@ textarea {
   min-width: 110px;
   font-size: 13px;
   padding: 7px 8px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .bulk-table input.has-error,
 .bulk-table select.has-error {
   border-color: var(--danger);
+}
+
+/* A focused cell grows via transform (not width/padding) so it doesn't
+   reflow the whole column's width for every row — scaling up is purely
+   visual, the layout box underneath stays the same size. */
+.bulk-table input:focus,
+.bulk-table select:focus {
+  position: relative;
+  z-index: 5;
+  transform: scale(1.18);
+  transform-origin: left center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .bulk-table-num {
