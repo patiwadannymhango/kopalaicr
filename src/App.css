@@ -175,6 +175,55 @@ main {
   flex-wrap: wrap;
 }
 
+.bulk-cta-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 4px 0 24px;
+  padding: 14px 18px;
+  border: 1px solid rgba(217, 119, 47, 0.35);
+  border-radius: 10px;
+  background: rgba(217, 119, 47, 0.08);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.bulk-cta-banner:hover {
+  border-color: var(--copper);
+  background: rgba(217, 119, 47, 0.14);
+  transform: translateY(-1px);
+}
+
+.bulk-cta-banner-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.bulk-cta-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.bulk-cta-banner-text strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.bulk-cta-banner-text span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.bulk-cta-banner-arrow {
+  color: var(--copper);
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .section-head-link {
   font-size: 13px;
   font-weight: 600;

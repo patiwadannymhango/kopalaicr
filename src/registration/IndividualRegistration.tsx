@@ -295,12 +295,16 @@ export default function IndividualRegistration() {
 
       {step === 'details' && (
         <>
-          <div className="section-head-row">
-            <p className="hint">Tell us who's running — your details, then payment.</p>
-            <button type="button" className="btn-text" onClick={() => setBulkModalOpen(true)}>
-              Register multiple people instead →
-            </button>
-          </div>
+          <p className="hint">Tell us who's running — your details, then payment.</p>
+
+          <button type="button" className="bulk-cta-banner" onClick={() => setBulkModalOpen(true)}>
+            <span className="bulk-cta-banner-icon" aria-hidden="true">👥</span>
+            <span className="bulk-cta-banner-text">
+              <strong>Registering more than one person?</strong>
+              <span>Add your whole group at once and pay together.</span>
+            </span>
+            <span className="bulk-cta-banner-arrow" aria-hidden="true">→</span>
+          </button>
 
           <div className="grid-2">
             <Field label="Full name" required>
