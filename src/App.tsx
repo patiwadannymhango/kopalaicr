@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Categories from './pages/Categories';
 import Sponsors from './pages/Sponsors';
-import Register from './pages/Register';
+import RegisterRedirect from './components/RegisterRedirect';
 import Exhibitors from './pages/Exhibitors';
 import Gallery from './pages/Gallery';
 import SplashLoader from './components/SplashLoader';
@@ -31,7 +31,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/sponsors" element={<Sponsors />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterRedirect />} />
           <Route path="/exhibitors" element={<Exhibitors />} />
           <Route path="/vendors" element={<Exhibitors />} />
           <Route path="/gallery" element={<Gallery />} />

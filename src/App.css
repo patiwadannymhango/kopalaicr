@@ -1632,7 +1632,7 @@ textarea {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
 
-/* Entry-type tabs — Register page */
+/* Entry-type tabs — registration modal */
 .entry-tabs {
   display: flex;
   gap: 8px;
@@ -1654,6 +1654,11 @@ textarea {
 .entry-tabs button.active {
   color: var(--ink);
   border-bottom-color: var(--copper);
+}
+
+.modal-entry-tabs {
+  margin: 0;
+  padding: 14px 24px 0;
 }
 
 .panel-form {
