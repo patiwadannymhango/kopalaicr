@@ -1893,8 +1893,17 @@ textarea {
   scrollbar-color: var(--copper-deep) transparent;
 }
 
+/* Fixed layout + explicit per-column widths (below) — under the
+   default "auto" table layout, a column can never shrink past its own
+   header text's natural width (nowrap), which silently defeated the
+   input min-widths below: "Club / institution" stayed wide no matter
+   how small its input's min-width was, because the header text itself
+   was wider. Fixed layout hands width control entirely to the <th>
+   widths instead, and header text is left free to wrap onto a second
+   line where its column is narrower than its label. */
 .bulk-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -1908,9 +1917,11 @@ textarea {
   letter-spacing: 0.03em;
   text-align: left;
   padding: 10px 8px;
-  white-space: nowrap;
+  white-space: normal;
+  line-height: 1.3;
   position: sticky;
   top: 0;
+  width: 110px;
 }
 
 .bulk-table td {
@@ -1923,10 +1934,34 @@ textarea {
 .bulk-table input,
 .bulk-table select {
   width: 100%;
-  min-width: 110px;
   font-size: 13px;
   padding: 7px 8px;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Column-level sizing — the handful of fields that matter most (name,
+   email, phone, race) get more room; the rarely-critical ones (club,
+   emergency contact name, medical notes — emergency phone is required
+   but still low-priority for screen space) get less. Everything else
+   (gender, age, country, town/city) stays at the default 110px. */
+th.bulk-col-num {
+  width: 34px;
+}
+
+th.bulk-col-primary {
+  width: 180px;
+}
+
+th.bulk-col-race {
+  width: 210px;
+}
+
+th.bulk-col-minor {
+  width: 75px;
+}
+
+th.bulk-col-remove {
+  width: 34px;
 }
 
 .bulk-table input.has-error,
@@ -1941,7 +1976,7 @@ textarea {
 .bulk-table select:focus {
   position: relative;
   z-index: 5;
-  transform: scale(1.18);
+  transform: scale(2);
   transform-origin: left center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
