@@ -55,6 +55,7 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     add('Captain', `${d.captainFirstName} ${d.captainLastName}`.trim());
     add('Captain email', d.captainEmail);
     add('Captain phone', d.captainPhone);
+    add('Participants', d.participantCount);
     if (d.roster.length) add('Runners submitted', `${d.roster.length}`);
   } else if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;

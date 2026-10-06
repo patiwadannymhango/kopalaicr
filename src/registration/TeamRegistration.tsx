@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, TeamDetails } from '../types';
-import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
+import { RELAY_CATEGORIES } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
@@ -20,6 +20,7 @@ const initialDetails: TeamDetails = {
   captainLastName: '',
   captainEmail: '',
   captainPhone: '',
+  participantCount: '',
   roster: [],
   acceptedTerms: false,
 };
@@ -93,6 +94,10 @@ export default function TeamRegistration() {
       !details.captainPhone
     ) {
       setError('Please fill in the team name, company, category and captain details.');
+      return;
+    }
+    if (!details.participantCount || Number(details.participantCount) < 1) {
+      setError('Please enter the number of participants.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -234,8 +239,6 @@ export default function TeamRegistration() {
 
       {step === 'details' && (
         <>
-          <p className="hint">One entry fee covers the full {RELAY_TEAM_SIZE}-runner team.</p>
-
           <div className="grid-2">
             <Field label="Team name" required>
               <input value={details.teamName} onChange={(e) => update('teamName', e.target.value)} placeholder="e.g. Kansanshi Runners" />
@@ -250,6 +253,15 @@ export default function TeamRegistration() {
                   <option key={c.value} value={c.value}>{c.label}</option>
                 ))}
               </select>
+            </Field>
+            <Field label="Number of participants" required>
+              <input
+                type="number"
+                min={1}
+                value={details.participantCount}
+                onChange={(e) => update('participantCount', e.target.value)}
+                placeholder="e.g. 10"
+              />
             </Field>
           </div>
 
@@ -297,6 +309,10 @@ export default function TeamRegistration() {
           <div className="summary-row">
             <span>Category</span>
             <strong>{selectedCategory?.name ?? RELAY_CATEGORIES.find((c) => c.value === details.relayCategory)?.label ?? '—'}</strong>
+          </div>
+          <div className="summary-row">
+            <span>Participants</span>
+            <strong>{details.participantCount || '—'}</strong>
           </div>
           <div className="summary-row">
             <span>Entry fee — full team</span>
