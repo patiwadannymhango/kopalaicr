@@ -57,7 +57,7 @@ export default function Layout() {
               </div>
               <div>
                 <span className="footer-label">Register</span>
-                <Link to="/register">Team / relay entry</Link>
+                <Link to="/register">Group | Relay Registration</Link>
                 <Link to="/register">Individual entry</Link>
                 <Link to="/exhibitors">Exhibitor entry</Link>
                 <a href="/register#track">Track registration</a>

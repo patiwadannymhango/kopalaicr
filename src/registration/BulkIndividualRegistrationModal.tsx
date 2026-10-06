@@ -245,101 +245,155 @@ export default function BulkIndividualRegistrationModal({
 
         <h3 style={{ marginTop: 8, marginBottom: 4 }}>People ({rows.length})</h3>
 
-        {rows.map((row, i) => (
-          <div className="bulk-row" key={row.id}>
-            <div className="bulk-row-head">
-              <span className="bulk-row-num">Person {i + 1}</span>
-              <span className="bulk-row-fee">
-                {feeFor(row.raceCategory) != null ? `K${feeFor(row.raceCategory)}` : ''}
-              </span>
-              <button
-                type="button"
-                className="roster-remove"
-                onClick={() => removeRow(row.id)}
-                aria-label={`Remove person ${i + 1}`}
-                disabled={rows.length === 1}
-              >
-                ×
-              </button>
-            </div>
+        <div className="bulk-table-wrap">
+          <table className="bulk-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Full name *</th>
+                <th>Email *</th>
+                <th>Phone *</th>
+                <th>Race *</th>
+                <th>Gender</th>
+                <th>Age range</th>
+                <th>Country</th>
+                <th>Town / City</th>
+                <th>Club / institution</th>
+                <th>Emergency contact name</th>
+                <th>Emergency contact phone *</th>
+                <th>Medical notes</th>
+                <th>Fee</th>
+                <th aria-hidden="true"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={row.id}>
+                  <td className="bulk-table-num">{i + 1}</td>
+                  <td>
+                    <input
+                      className={row.errors?.fullName ? 'has-error' : ''}
+                      title={row.errors?.fullName}
+                      value={row.fullName}
+                      onChange={(e) => updateRow(row.id, 'fullName', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="email"
+                      className={row.errors?.email ? 'has-error' : ''}
+                      title={row.errors?.email}
+                      value={row.email}
+                      onChange={(e) => updateRow(row.id, 'email', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className={row.errors?.phone ? 'has-error' : ''}
+                      title={row.errors?.phone}
+                      value={row.phone}
+                      onChange={(e) => updateRow(row.id, 'phone', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <select
+                      className={row.errors?.raceCategory ? 'has-error' : ''}
+                      title={row.errors?.raceCategory}
+                      value={row.raceCategory}
+                      onChange={(e) => updateRow(row.id, 'raceCategory', e.target.value as BulkMemberRow['raceCategory'])}
+                    >
+                      <option value="">Select race</option>
+                      {RACE_CATEGORIES.map((c) => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <select value={row.gender} onChange={(e) => updateRow(row.id, 'gender', e.target.value as Gender)}>
+                      <option value="">—</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      value={row.ageRange}
+                      onChange={(e) => updateRow(row.id, 'ageRange', e.target.value as BulkMemberRow['ageRange'])}
+                    >
+                      <option value="">—</option>
+                      <option value="Under 18">Under 18</option>
+                      <option value="18-29">18–29</option>
+                      <option value="30-39">30–39</option>
+                      <option value="40-49">40–49</option>
+                      <option value="50-59">50–59</option>
+                      <option value="60+">60+</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input value={row.country} onChange={(e) => updateRow(row.id, 'country', e.target.value)} />
+                  </td>
+                  <td>
+                    <input value={row.townOrCity} onChange={(e) => updateRow(row.id, 'townOrCity', e.target.value)} />
+                  </td>
+                  <td>
+                    <input
+                      value={row.clubOrInstitution}
+                      onChange={(e) => updateRow(row.id, 'clubOrInstitution', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      value={row.emergencyContactName}
+                      onChange={(e) => updateRow(row.id, 'emergencyContactName', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className={row.errors?.emergencyContactPhone ? 'has-error' : ''}
+                      title={row.errors?.emergencyContactPhone}
+                      value={row.emergencyContactPhone}
+                      onChange={(e) => updateRow(row.id, 'emergencyContactPhone', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      value={row.medicalNotes}
+                      onChange={(e) => updateRow(row.id, 'medicalNotes', e.target.value)}
+                    />
+                  </td>
+                  <td className="bulk-table-fee">
+                    {feeFor(row.raceCategory) != null ? `K${feeFor(row.raceCategory)}` : '—'}
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="roster-remove"
+                      onClick={() => removeRow(row.id)}
+                      aria-label={`Remove person ${i + 1}`}
+                      disabled={rows.length === 1}
+                    >
+                      ×
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-            <div className="grid-2">
-              <Field label="Full name" required>
-                <input value={row.fullName} onChange={(e) => updateRow(row.id, 'fullName', e.target.value)} />
-                {row.errors?.fullName && <span className="field-error">{row.errors.fullName}</span>}
-              </Field>
-              <Field label="Email" required>
-                <input
-                  type="email"
-                  value={row.email}
-                  onChange={(e) => updateRow(row.id, 'email', e.target.value)}
-                />
-                {row.errors?.email && <span className="field-error">{row.errors.email}</span>}
-              </Field>
-              <Field label="Phone" required>
-                <input value={row.phone} onChange={(e) => updateRow(row.id, 'phone', e.target.value)} />
-                {row.errors?.phone && <span className="field-error">{row.errors.phone}</span>}
-              </Field>
-              <Field label="Race" required>
-                <select
-                  value={row.raceCategory}
-                  onChange={(e) => updateRow(row.id, 'raceCategory', e.target.value as BulkMemberRow['raceCategory'])}
-                >
-                  <option value="">Select race</option>
-                  {RACE_CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
-                {row.errors?.raceCategory && <span className="field-error">{row.errors.raceCategory}</span>}
-              </Field>
-              <Field label="Gender">
-                <select value={row.gender} onChange={(e) => updateRow(row.id, 'gender', e.target.value as Gender)}>
-                  <option value="">Select</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </Field>
-              <Field label="Age range">
-                <select
-                  value={row.ageRange}
-                  onChange={(e) => updateRow(row.id, 'ageRange', e.target.value as BulkMemberRow['ageRange'])}
-                >
-                  <option value="">Select</option>
-                  <option value="Under 18">Under 18</option>
-                  <option value="18-29">18–29</option>
-                  <option value="30-39">30–39</option>
-                  <option value="40-49">40–49</option>
-                  <option value="50-59">50–59</option>
-                  <option value="60+">60+</option>
-                </select>
-              </Field>
-              <Field label="Town / City">
-                <input value={row.townOrCity} onChange={(e) => updateRow(row.id, 'townOrCity', e.target.value)} />
-              </Field>
-              <Field label="Club / institution">
-                <input
-                  value={row.clubOrInstitution}
-                  onChange={(e) => updateRow(row.id, 'clubOrInstitution', e.target.value)}
-                />
-              </Field>
-              <Field label="Emergency contact name">
-                <input
-                  value={row.emergencyContactName}
-                  onChange={(e) => updateRow(row.id, 'emergencyContactName', e.target.value)}
-                />
-              </Field>
-              <Field label="Emergency contact phone" required>
-                <input
-                  value={row.emergencyContactPhone}
-                  onChange={(e) => updateRow(row.id, 'emergencyContactPhone', e.target.value)}
-                />
-                {row.errors?.emergencyContactPhone && (
-                  <span className="field-error">{row.errors.emergencyContactPhone}</span>
-                )}
-              </Field>
-            </div>
-          </div>
-        ))}
+        {rows.some((r) => r.errors) && (
+          <ul className="bulk-error-list">
+            {rows.map((row, i) =>
+              row.errors
+                ? Object.entries(row.errors).map(([field, message]) => (
+                    <li key={`${row.id}-${field}`} className="field-error">
+                      Row {i + 1}: {message}
+                    </li>
+                  ))
+                : null
+            )}
+          </ul>
+        )}
 
         <button type="button" className="btn-ghost btn-full" onClick={addRow}>
           + Add another person

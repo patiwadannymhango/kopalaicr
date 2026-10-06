@@ -1819,7 +1819,7 @@ textarea {
 }
 
 .modal-panel-wide {
-  max-width: 860px;
+  max-width: min(1440px, 96vw);
 }
 
 .modal-panel::-webkit-scrollbar {
@@ -1873,10 +1873,9 @@ textarea {
   padding: 22px 24px 24px;
 }
 
-/* Group/bulk individual registration — one bordered "card" per person
-   inside the modal, each laying its fields out in the existing .grid-2
-   pattern rather than a literal wide table (a person has ~12 fields,
-   which doesn't fit as table columns on any realistic viewport). */
+/* Group/bulk individual registration — a real spreadsheet-style table,
+   one row per person, horizontally scrollable within the (wide) modal
+   on anything narrower than its full content width. */
 .bulk-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1884,37 +1883,73 @@ textarea {
   margin-bottom: 18px;
 }
 
-.bulk-row {
+.bulk-table-wrap {
+  overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 14px;
-  background: var(--cream);
+  margin-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--copper-deep) transparent;
 }
 
-.bulk-row-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.bulk-row-num {
+.bulk-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 13px;
-  font-weight: 700;
-  color: var(--copper);
 }
 
-.bulk-row-fee {
-  font-size: 13px;
+.bulk-table th {
+  background: var(--surface-2);
   color: var(--muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: left;
+  padding: 10px 8px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
 }
 
-.bulk-empty {
+.bulk-table td {
+  padding: 6px;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.bulk-table input,
+.bulk-table select {
+  width: 100%;
+  min-width: 110px;
+  font-size: 13px;
+  padding: 7px 8px;
+}
+
+.bulk-table input.has-error,
+.bulk-table select.has-error {
+  border-color: var(--danger);
+}
+
+.bulk-table-num {
+  color: var(--muted);
   text-align: center;
-  color: var(--muted);
-  padding: 24px 0;
-  font-size: 14px;
+}
+
+.bulk-table-fee {
+  color: var(--copper);
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.bulk-error-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .bulk-total {
