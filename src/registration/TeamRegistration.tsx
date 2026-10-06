@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { MobileMoneyProvider, PaymentInfo, RegistrationRecord, TeamDetails } from '../types';
-import { RELAY_CATEGORIES, RELAY_TEAM_SIZE } from '../types';
+import { RELAY_CATEGORIES } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchRelayCategories, submitTeamRegistration } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
@@ -92,7 +92,7 @@ export default function TeamRegistration() {
       !details.captainEmail ||
       !details.captainPhone
     ) {
-      setError('Please fill in the team name, company, category and captain details.');
+      setError('Please fill in the organization, category and captain details.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -234,14 +234,15 @@ export default function TeamRegistration() {
 
       {step === 'details' && (
         <>
-          <p className="hint">One entry fee covers the full {RELAY_TEAM_SIZE}-runner team.</p>
-
           <div className="grid-2">
-            <Field label="Team name" required>
-              <input value={details.teamName} onChange={(e) => update('teamName', e.target.value)} placeholder="e.g. Kansanshi Runners" />
-            </Field>
-            <Field label="Company / institution" required>
-              <input value={details.companyOrInstitution} onChange={(e) => update('companyOrInstitution', e.target.value)} />
+            <Field label="Organization | Club" required>
+              <input
+                value={details.teamName}
+                onChange={(e) =>
+                  setDetails((d) => ({ ...d, teamName: e.target.value, companyOrInstitution: e.target.value }))
+                }
+                placeholder="e.g. Kansanshi Runners"
+              />
             </Field>
             <Field label="Relay category" required>
               <select value={details.relayCategory} onChange={(e) => update('relayCategory', e.target.value as TeamDetails['relayCategory'])}>

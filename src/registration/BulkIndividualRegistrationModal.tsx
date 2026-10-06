@@ -10,7 +10,6 @@ import {
 } from '../api/individualApi';
 import type { BackendCategory, SubmitRegistrationResult } from '../api/individualApi';
 import Modal from '../components/Modal';
-import Field from '../components/Field';
 import Spinner from '../components/Spinner';
 
 function makeId() {
@@ -35,8 +34,6 @@ function emptyRow(): BulkMemberRow {
   };
 }
 
-const initialSubmittedBy: SubmittedBy = { fullName: '', email: '', phone: '' };
-
 export default function BulkIndividualRegistrationModal({
   open,
   onClose,
@@ -47,7 +44,6 @@ export default function BulkIndividualRegistrationModal({
   onSuccess: (result: SubmitRegistrationResult, submittedBy: SubmittedBy, rows: BulkMemberRow[]) => void;
 }) {
   const [categories, setCategories] = useState<BackendCategory[] | null>(null);
-  const [submittedBy, setSubmittedBy] = useState<SubmittedBy>(initialSubmittedBy);
   const [rows, setRows] = useState<BulkMemberRow[]>([emptyRow()]);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
@@ -155,10 +151,6 @@ export default function BulkIndividualRegistrationModal({
   async function handleSubmit() {
     setError('');
 
-    if (!submittedBy.fullName || !submittedBy.email || !submittedBy.phone) {
-      setError('Please fill in your own name, email and phone as the person submitting this group.');
-      return;
-    }
     const incomplete = rows.some(
       (r) => !r.fullName || !r.email || !r.phone || !r.raceCategory || !r.emergencyContactPhone
     );
@@ -170,6 +162,16 @@ export default function BulkIndividualRegistrationModal({
       setError('Please accept the event terms and indemnity to continue.');
       return;
     }
+
+    // No separate "submitted by" contact is collected — the first person
+    // in the table doubles as the group's billing/notification contact
+    // (confirmation summary, card billing details if that method is
+    // chosen). They're always filled in by the point this validates.
+    const submittedBy: SubmittedBy = {
+      fullName: rows[0].fullName,
+      email: rows[0].email,
+      phone: rows[0].phone,
+    };
 
     setSubmitting(true);
     try {
@@ -184,7 +186,6 @@ export default function BulkIndividualRegistrationModal({
 
   function handleClose() {
     setRows([emptyRow()]);
-    setSubmittedBy(initialSubmittedBy);
     setAcceptedTerms(false);
     setError('');
     onClose();
@@ -218,32 +219,10 @@ export default function BulkIndividualRegistrationModal({
           />
         </div>
 
-        <div className="grid-2">
-          <Field label="Your name" required>
-            <input
-              value={submittedBy.fullName}
-              onChange={(e) => setSubmittedBy((p) => ({ ...p, fullName: e.target.value }))}
-              placeholder="Person submitting this group"
-            />
-          </Field>
-          <Field label="Your email" required>
-            <input
-              type="email"
-              value={submittedBy.email}
-              onChange={(e) => setSubmittedBy((p) => ({ ...p, email: e.target.value }))}
-              placeholder="you@example.com"
-            />
-          </Field>
-          <Field label="Your phone" required>
-            <input
-              value={submittedBy.phone}
-              onChange={(e) => setSubmittedBy((p) => ({ ...p, phone: e.target.value }))}
-              placeholder="e.g. 097 000 0000"
-            />
-          </Field>
-        </div>
-
         <h3 style={{ marginTop: 8, marginBottom: 4 }}>People ({rows.length})</h3>
+        <p className="hint" style={{ marginTop: 0 }}>
+          The first person listed is treated as the group's contact — confirmation and billing go to them.
+        </p>
 
         <div className="bulk-table-wrap">
           <table className="bulk-table">
