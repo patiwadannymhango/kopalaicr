@@ -94,7 +94,6 @@ export interface TeamDetails {
   captainLastName: string;
   captainEmail: string;
   captainPhone: string;
-  participantCount: string;
   roster: RunnerRosterEntry[];
   acceptedTerms: boolean;
 }

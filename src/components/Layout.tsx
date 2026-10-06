@@ -2,12 +2,8 @@ import { NavLink, Outlet, Link } from 'react-router-dom';
 import { EVENT } from '../data/event';
 import PartnerLogos from './PartnerLogos';
 import WhatsAppButton from './WhatsAppButton';
-import RegistrationModal from './RegistrationModal';
-import { RegistrationModalProvider, useRegistrationModal } from '../context/RegistrationModalContext';
 
-function LayoutInner() {
-  const { open } = useRegistrationModal();
-
+export default function Layout() {
   return (
     <div className="site">
       <header className="site-header">
@@ -25,9 +21,9 @@ function LayoutInner() {
             <NavLink to="/gallery">Gallery 2025</NavLink>
           </nav>
           <div className="site-header-actions">
-            <button type="button" className="btn-primary btn-sm" onClick={() => open()}>
+            <Link to="/register" className="btn-primary btn-sm">
               Register
-            </button>
+            </Link>
             <Link to="/exhibitors" className="btn-vendor btn-sm">
               Exhibitor registration
             </Link>
@@ -61,10 +57,10 @@ function LayoutInner() {
               </div>
               <div>
                 <span className="footer-label">Register</span>
-                <button type="button" onClick={() => open('team')}>Group Registration</button>
-                <button type="button" onClick={() => open('individual')}>Individual entry</button>
+                <Link to="/register">Team / relay entry</Link>
+                <Link to="/register">Individual entry</Link>
                 <Link to="/exhibitors">Exhibitor entry</Link>
-                <a href="/#track">Track registration</a>
+                <a href="/register#track">Track registration</a>
               </div>
               <div>
                 <span className="footer-label">About</span>
@@ -90,15 +86,6 @@ function LayoutInner() {
       </footer>
 
       <WhatsAppButton />
-      <RegistrationModal />
     </div>
-  );
-}
-
-export default function Layout() {
-  return (
-    <RegistrationModalProvider>
-      <LayoutInner />
-    </RegistrationModalProvider>
   );
 }
