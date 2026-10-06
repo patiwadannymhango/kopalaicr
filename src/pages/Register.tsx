@@ -24,7 +24,7 @@ export default function Register() {
         <div className="section-inner narrow">
           <div className="entry-tabs">
             <button type="button" className={tab === 'team' ? 'active' : ''} onClick={() => setTab('team')}>
-              Team / relay entry
+              Group Registration
             </button>
             <button type="button" className={tab === 'individual' ? 'active' : ''} onClick={() => setTab('individual')}>
               Individual entry
