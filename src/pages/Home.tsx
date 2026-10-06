@@ -8,11 +8,9 @@ import { fetchRelayCategories } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
 import Reveal from '../components/Reveal';
 import TrackRegistration from '../components/TrackRegistration';
-import { useRegistrationModal } from '../context/RegistrationModalContext';
 
 export default function Home() {
   const { days, hours, minutes, seconds } = useCountdown(EVENT.isoDate);
-  const { open } = useRegistrationModal();
 
   const [individualCategories, setIndividualCategories] = useState<BackendCategory[] | null>(null);
   const [relayCategories, setRelayCategories] = useState<BackendCategory[] | null>(null);
@@ -81,9 +79,9 @@ export default function Home() {
                 Athletics.
               </p>
               <div className="hero-cta">
-                <button type="button" className="btn-primary" onClick={() => open()}>
+                <Link to="/register" className="btn-primary">
                   Register
-                </button>
+                </Link>
                 <Link to="/exhibitors" className="btn-vendor">
                   Exhibitor registration
                 </Link>
@@ -170,7 +168,7 @@ export default function Home() {
         </div>
       </section> */}
 
-      <section className="section compact" id="track">
+      <section className="section compact">
         <div className="section-inner narrow">
           <Reveal as="div">
             <div className="eyebrow">Already registered?</div>

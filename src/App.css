@@ -1654,7 +1654,7 @@ textarea {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
 
-/* Entry-type tabs — registration modal */
+/* Entry-type tabs — Register page */
 .entry-tabs {
   display: flex;
   gap: 8px;
@@ -1681,90 +1681,6 @@ textarea {
 .panel-form {
   display: flex;
   flex-direction: column;
-}
-
-/* Registration modal */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(5, 4, 6, 0.72);
-  backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 100;
-  animation: fade-in 0.2s ease;
-}
-
-.modal-panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  width: 100%;
-  max-width: 640px;
-  max-height: 88vh;
-  overflow-y: auto;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
-  animation: fade-up 0.25s ease;
-  scrollbar-width: thin;
-  scrollbar-color: var(--copper-deep) transparent;
-}
-
-.modal-panel::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-panel::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-panel::-webkit-scrollbar-thumb {
-  background: var(--copper-deep);
-  border-radius: 8px;
-}
-
-.modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  background: var(--surface);
-  z-index: 2;
-}
-
-.modal-head h2 {
-  font-size: 17px;
-  margin: 0;
-}
-
-.modal-close {
-  background: transparent;
-  border: none;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.modal-close:hover {
-  background: var(--cream);
-  color: var(--ink);
-}
-
-.modal-body {
-  padding: 22px 24px 24px;
-}
-
-.modal-entry-tabs {
-  margin: 0;
-  padding: 14px 24px 0;
 }
 
 .panel-form.center {

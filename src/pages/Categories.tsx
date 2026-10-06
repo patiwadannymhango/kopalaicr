@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { RELAY_CATEGORIES, INDIVIDUAL_DIVISIONS, RELAY_TEAM_SIZE } from '../types';
 import { INCLUSIONS, DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchIndividualCategories } from '../api/individualApi';
@@ -6,10 +7,8 @@ import { fetchRelayCategories } from '../api/teamApi';
 import type { BackendCategory } from '../api/individualApi';
 import Reveal from '../components/Reveal';
 import Spinner from '../components/Spinner';
-import { useRegistrationModal } from '../context/RegistrationModalContext';
 
 export default function Categories() {
-  const { open } = useRegistrationModal();
   const [individualCategories, setIndividualCategories] = useState<BackendCategory[] | null>(null);
   const [relayCategories, setRelayCategories] = useState<BackendCategory[] | null>(null);
 
@@ -146,9 +145,9 @@ export default function Categories() {
       <section className="cta-band">
         <h2>Ready when you are</h2>
         <p>Choose a category and complete your registration in minutes.</p>
-        <button type="button" className="btn-cta-light" onClick={() => open()}>
+        <Link to="/register" className="btn-cta-light">
           Register now
-        </button>
+        </Link>
       </section>
     </main>
   );

@@ -1,10 +1,8 @@
+import { Link } from 'react-router-dom';
 import { EVENT, OBJECTIVES } from '../data/event';
 import Reveal from '../components/Reveal';
-import { useRegistrationModal } from '../context/RegistrationModalContext';
 
 export default function About() {
-  const { open } = useRegistrationModal();
-
   return (
     <main>
       <section className="page-hero">
@@ -61,9 +59,9 @@ export default function About() {
       <section className="cta-band">
         <h2>Ready to join?</h2>
         <p>Enter a company team, race as an individual, take on a CEO or Directors sprint, or bring the kids along.</p>
-        <button type="button" className="btn-cta-light" onClick={() => open()}>
+        <Link to="/register" className="btn-cta-light">
           Register now
-        </button>
+        </Link>
       </section>
     </main>
   );
