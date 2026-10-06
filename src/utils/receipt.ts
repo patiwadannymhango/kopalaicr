@@ -1,5 +1,6 @@
 import { EVENT } from '../data/event';
-import type { IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
+import type { IndividualBatchDetails, IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
+import { RACE_CATEGORIES } from '../types';
 import { categoryLabel, statusLabel } from './registrationDisplay';
 
 const COPPER: [number, number, number] = [217, 119, 47];
@@ -40,7 +41,9 @@ function buildRows(record: RegistrationRecord): [string, string][] {
       ? '10KM Corporate Relay (team)'
       : record.entryType === 'vendor'
         ? 'Exhibitor entry'
-        : 'Individual entry';
+        : record.entryType === 'individual-batch'
+          ? 'Group registration'
+          : 'Individual entry';
 
   add('Reference', record.reference);
   add('Entry type', entryTypeLabel);
@@ -64,6 +67,21 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     add('Phone', d.phone);
     add('Business location', d.businessLocation);
     add('Products / services', d.productsServices);
+  } else if (record.entryType === 'individual-batch') {
+    const d = record.details as IndividualBatchDetails;
+    add('Submitted by', d.submittedBy.fullName);
+    add('Email', d.submittedBy.email);
+    add('Phone', d.submittedBy.phone);
+    add('People registered', `${d.members.length}`);
+    add(
+      'Names',
+      d.members
+        .map((m) => {
+          const category = RACE_CATEGORIES.find((c) => c.value === m.raceCategory);
+          return `${m.fullName} (${category?.label ?? m.raceCategory})`;
+        })
+        .join('; ')
+    );
   } else {
     const d = record.details as IndividualDetails;
     add('Full name', d.fullName);

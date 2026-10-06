@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { IndividualDetails, MobileMoneyProvider, PaymentInfo, RegistrationRecord } from '../types';
-import { RACE_CATEGORIES, INDIVIDUAL_DIVISIONS } from '../types';
+import type { BulkMemberRow, IndividualDetails, MobileMoneyProvider, PaymentInfo, RegistrationRecord, SubmittedBy } from '../types';
+import { RACE_CATEGORIES } from '../types';
 import { DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchIndividualCategories, submitIndividualRegistration } from '../api/individualApi';
-import type { BackendCategory } from '../api/individualApi';
+import type { BackendCategory, SubmitRegistrationResult } from '../api/individualApi';
 import { initiatePayment } from '../api/paymentApi';
 import { usePendingPayment } from '../hooks/usePendingPayment';
 import PaymentMethodPicker from '../components/PaymentMethodPicker';
@@ -11,11 +11,7 @@ import ProcessingPanel from '../components/ProcessingPanel';
 import Spinner from '../components/Spinner';
 import Field from '../components/Field';
 import { downloadReceipt } from '../utils/receipt';
-import type { RaceCategory } from '../types';
-
-/** Races with divisions (Men's Open, Women's Open, Corporate, Masters) —
- * the 100m CEO/Directors races and Kids Athletics have none. */
-const DIVISION_RACE_CATEGORIES: RaceCategory[] = ['5km-individual', '10km-individual', '21km-individual'];
+import BulkIndividualRegistrationModal from './BulkIndividualRegistrationModal';
 
 const initialDetails: IndividualDetails = {
   fullName: '',
@@ -25,7 +21,6 @@ const initialDetails: IndividualDetails = {
   ageRange: '',
   country: 'Zambia',
   raceCategory: '',
-  division: '',
   townOrCity: '',
   clubOrInstitution: '',
   emergencyContactName: '',
@@ -55,19 +50,43 @@ export default function IndividualRegistration() {
   const [record, setRecord] = useState<RegistrationRecord | null>(null);
   const [downloading, setDownloading] = useState(false);
 
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [pendingBatch, setPendingBatch] = useState<SubmitRegistrationResult | null>(null);
+  const [batchSubmittedBy, setBatchSubmittedBy] = useState<SubmittedBy | null>(null);
+  const [batchRows, setBatchRows] = useState<BulkMemberRow[]>([]);
+
+  const contactEmail = pendingBatch ? batchSubmittedBy?.email ?? '' : details.email;
+
   const { pending, setPending, elapsed, outcome, timeoutMs, retry, keepWaiting } = usePendingPayment(
     'kicr-individual-pending',
     (reference) => {
-      setRecord({
-        reference,
-        entryType: 'individual',
-        details,
-        payment,
-        status: 'confirmed',
-        submittedAt: new Date().toISOString(),
-        amount: pending?.amount ?? null,
-        currency: pending?.currency ?? 'ZMW',
-      });
+      setRecord(
+        pendingBatch && batchSubmittedBy
+          ? {
+              reference,
+              entryType: 'individual-batch',
+              details: {
+                submittedBy: batchSubmittedBy,
+                members: batchRows.map((r) => ({ fullName: r.fullName, raceCategory: r.raceCategory })),
+                acceptedTerms: true,
+              },
+              payment,
+              status: 'confirmed',
+              submittedAt: new Date().toISOString(),
+              amount: pending?.amount ?? null,
+              currency: pending?.currency ?? 'ZMW',
+            }
+          : {
+              reference,
+              entryType: 'individual',
+              details,
+              payment,
+              status: 'confirmed',
+              submittedAt: new Date().toISOString(),
+              amount: pending?.amount ?? null,
+              currency: pending?.currency ?? 'ZMW',
+            }
+      );
       setStep('done');
     }
   );
@@ -86,18 +105,27 @@ export default function IndividualRegistration() {
   const selectedCategory = categories?.find((c) => c.code === details.raceCategory);
   const selectedCategoryLabel = selectedCategory?.name ?? RACE_CATEGORIES.find((c) => c.value === details.raceCategory)?.label ?? '';
   const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
+  // What's actually payable on the payment step — the batch's own total
+  // when a group was registered via the modal, otherwise the single
+  // selected race's fee.
+  const payAmount = pendingBatch ? pendingBatch.amount : fee;
 
   function update<K extends keyof IndividualDetails>(key: K, value: IndividualDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
   }
 
+  function handleBulkSuccess(result: SubmitRegistrationResult, submittedBy: SubmittedBy, rows: BulkMemberRow[]) {
+    setPendingBatch(result);
+    setBatchSubmittedBy(submittedBy);
+    setBatchRows(rows);
+    setBulkModalOpen(false);
+    setError('');
+    setStep('payment');
+  }
+
   function handleDetailsContinue() {
     if (!details.fullName || !details.email || !details.phone || !details.raceCategory) {
       setError('Please fill in name, email, phone and race category.');
-      return;
-    }
-    if (DIVISION_RACE_CATEGORIES.includes(details.raceCategory) && !details.division) {
-      setError('Please choose a division for your race.');
       return;
     }
     if (!details.emergencyContactPhone) {
@@ -133,19 +161,36 @@ export default function IndividualRegistration() {
 
     setSubmitting(true);
     try {
-      const registration = await submitIndividualRegistration(details);
+      const registration = pendingBatch ?? (await submitIndividualRegistration(details));
 
       if (payment.method === 'bank-transfer') {
-        setRecord({
-          reference: registration.reference,
-          entryType: 'individual',
-          details,
-          payment,
-          status: 'pending-bank-transfer',
-          submittedAt: new Date().toISOString(),
-          amount: registration.amount,
-          currency: registration.currency,
-        });
+        setRecord(
+          pendingBatch && batchSubmittedBy
+            ? {
+                reference: registration.reference,
+                entryType: 'individual-batch',
+                details: {
+                  submittedBy: batchSubmittedBy,
+                  members: batchRows.map((r) => ({ fullName: r.fullName, raceCategory: r.raceCategory })),
+                  acceptedTerms: true,
+                },
+                payment,
+                status: 'pending-bank-transfer',
+                submittedAt: new Date().toISOString(),
+                amount: registration.amount,
+                currency: registration.currency,
+              }
+            : {
+                reference: registration.reference,
+                entryType: 'individual',
+                details,
+                payment,
+                status: 'pending-bank-transfer',
+                submittedAt: new Date().toISOString(),
+                amount: registration.amount,
+                currency: registration.currency,
+              }
+        );
         setStep('done');
         return;
       }
@@ -164,7 +209,7 @@ export default function IndividualRegistration() {
           paymentId: pay.paymentId,
           registrationId: registration.registrationId,
           reference: registration.reference,
-          email: details.email,
+          email: contactEmail,
           amount: registration.amount,
           currency: registration.currency,
           method: 'card',
@@ -190,7 +235,7 @@ export default function IndividualRegistration() {
           paymentId: pay.paymentId,
           registrationId: registration.registrationId,
           reference: registration.reference,
-          email: details.email,
+          email: contactEmail,
           amount: registration.amount,
           currency: registration.currency,
           method: 'mobile-money',
@@ -214,6 +259,9 @@ export default function IndividualRegistration() {
   function handleStartOver() {
     setDetails(initialDetails);
     setPayment(initialPayment);
+    setPendingBatch(null);
+    setBatchSubmittedBy(null);
+    setBatchRows([]);
     setStep('details');
     setRecord(null);
   }
@@ -247,7 +295,12 @@ export default function IndividualRegistration() {
 
       {step === 'details' && (
         <>
-          <p className="hint">Tell us who's running — your details, then payment.</p>
+          <div className="section-head-row">
+            <p className="hint">Tell us who's running — your details, then payment.</p>
+            <button type="button" className="btn-text" onClick={() => setBulkModalOpen(true)}>
+              Register multiple people instead →
+            </button>
+          </div>
 
           <div className="grid-2">
             <Field label="Full name" required>
@@ -291,16 +344,6 @@ export default function IndividualRegistration() {
                 ))}
               </select>
             </Field>
-            {DIVISION_RACE_CATEGORIES.includes(details.raceCategory) && (
-              <Field label="Division" required>
-                <select value={details.division} onChange={(e) => update('division', e.target.value as IndividualDetails['division'])}>
-                  <option value="">Select division</option>
-                  {INDIVIDUAL_DIVISIONS.map((d) => (
-                    <option key={d.value} value={d.value}>{d.label}</option>
-                  ))}
-                </select>
-              </Field>
-            )}
           </div>
 
           {details.raceCategory && (
@@ -346,12 +389,14 @@ export default function IndividualRegistration() {
       {step === 'payment' && (
         <>
           <div className="summary-row">
-            <span>Race</span>
-            <strong>{selectedCategoryLabel || '—'}</strong>
+            <span>{pendingBatch ? 'Group' : 'Race'}</span>
+            <strong>
+              {pendingBatch ? `${batchRows.length} ${batchRows.length === 1 ? 'person' : 'people'}` : selectedCategoryLabel || '—'}
+            </strong>
           </div>
           <div className="summary-row">
-            <span>Entry fee</span>
-            <strong className="fee-highlight">{`K${(fee ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
+            <span>{pendingBatch ? 'Total' : 'Entry fee'}</span>
+            <strong className="fee-highlight">{`K${(payAmount ?? DEFAULT_ENTRY_FEE).toFixed(2)}`}</strong>
           </div>
 
           <PaymentMethodPicker payment={payment} onChange={(patch) => setPayment((p) => ({ ...p, ...patch }))} />
@@ -366,11 +411,11 @@ export default function IndividualRegistration() {
                   {payment.method === 'card' ? 'Redirecting to checkout…' : payment.method === 'bank-transfer' ? 'Saving…' : 'Sending prompt…'}
                 </span>
               ) : payment.method === 'card' ? (
-                fee ? `Pay by card — K${fee.toFixed(2)}` : 'Continue to card checkout'
+                payAmount ? `Pay by card — K${payAmount.toFixed(2)}` : 'Continue to card checkout'
               ) : payment.method === 'bank-transfer' ? (
                 'Register — I\'ll pay by bank transfer'
-              ) : fee ? (
-                `Send payment prompt — K${fee.toFixed(2)}`
+              ) : payAmount ? (
+                `Send payment prompt — K${payAmount.toFixed(2)}`
               ) : (
                 'Confirm registration'
               )}
@@ -399,9 +444,14 @@ export default function IndividualRegistration() {
           <h2>{record.status === 'pending-bank-transfer' ? 'Registration submitted' : 'Registration confirmed'}</h2>
           <p className="hint">
             {record.status === 'pending-bank-transfer'
-              ? `We've saved your registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${details.email}.`
-              : `A confirmation has been sent to ${details.email}. Keep your reference safe — you'll need it to look up your entry later.`}
+              ? `We've saved your registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${contactEmail}.`
+              : `A confirmation has been sent to ${contactEmail}. Keep your reference safe — you'll need it to look up your entry later.`}
           </p>
+          {record.entryType === 'individual-batch' && (
+            <p className="hint small">
+              Each person's own registration reference has been emailed to them directly.
+            </p>
+          )}
 
           {record.reference && (
             <div className="reference-box">
@@ -426,6 +476,12 @@ export default function IndividualRegistration() {
           </div>
         </div>
       )}
+
+      <BulkIndividualRegistrationModal
+        open={bulkModalOpen}
+        onClose={() => setBulkModalOpen(false)}
+        onSuccess={handleBulkSuccess}
+      />
     </div>
   );
 }

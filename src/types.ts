@@ -16,18 +16,6 @@ export const RACE_CATEGORIES: { value: RaceCategory; label: string; distance: st
   { value: 'kids-athletics', label: 'Kids Athletics', distance: 'Fun run' },
 ];
 
-export type IndividualDivision = '' | 'mens-open' | 'womens-open' | 'corporate' | 'masters';
-
-/** Only meaningful for the 5KM, 10KM and 21KM Individual races — the 100m
- * CEO and Directors races and Kids Athletics have no divisions, they're
- * open to whoever's eligible for that race. */
-export const INDIVIDUAL_DIVISIONS: { value: IndividualDivision; label: string }[] = [
-  { value: 'mens-open', label: "Men's Open" },
-  { value: 'womens-open', label: "Women's Open" },
-  { value: 'corporate', label: 'Corporate' },
-  { value: 'masters', label: 'Masters' },
-];
-
 export type RelayCategory = '' | 'mens-team' | 'womens-team' | 'mixed-team';
 
 export const RELAY_CATEGORIES: { value: RelayCategory; label: string }[] = [
@@ -61,7 +49,7 @@ export type AgeRange = '' | 'Under 18' | '18-29' | '30-39' | '40-49' | '50-59' |
 export type PaymentMethod = 'mobile-money' | 'card' | 'bank-transfer';
 export type MobileMoneyProvider = '' | 'MTN_MONEY' | 'AIRTEL_MONEY' | 'ZAMTEL_KWACHA';
 export type RegistrationStatus = 'confirmed' | 'pending-bank-transfer' | 'processing' | 'failed';
-export type EntryType = 'individual' | 'team' | 'vendor';
+export type EntryType = 'individual' | 'individual-batch' | 'team' | 'vendor';
 export type Step = 'details' | 'payment' | 'processing' | 'done';
 
 export interface IndividualDetails {
@@ -72,12 +60,45 @@ export interface IndividualDetails {
   ageRange: AgeRange;
   country: string;
   raceCategory: RaceCategory;
-  division: IndividualDivision;
   townOrCity: string;
   clubOrInstitution: string;
   emergencyContactName: string;
   emergencyContactPhone: string;
   medicalNotes: string;
+  acceptedTerms: boolean;
+}
+
+/** One row of a group registration — same shape as IndividualDetails
+ * minus acceptedTerms (collected once, at the batch level) plus a
+ * client-side `id` for React list keys and an optional per-field
+ * `errors` map (populated by an Excel upload parse, or by the create
+ * endpoint's validation response). */
+export interface BulkMemberRow {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender: Gender;
+  ageRange: AgeRange;
+  country: string;
+  raceCategory: RaceCategory;
+  townOrCity: string;
+  clubOrInstitution: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+  medicalNotes: string;
+  errors?: Record<string, string>;
+}
+
+export interface SubmittedBy {
+  fullName: string;
+  email: string;
+  phone: string;
+}
+
+export interface IndividualBatchDetails {
+  submittedBy: SubmittedBy;
+  members: { fullName: string; raceCategory: RaceCategory }[];
   acceptedTerms: boolean;
 }
 
@@ -130,7 +151,7 @@ export interface RegistrationRecord {
    * null while still pending payment or bank transfer. */
   reference: string | null;
   entryType: EntryType;
-  details: IndividualDetails | TeamDetails | VendorDetails;
+  details: IndividualDetails | IndividualBatchDetails | TeamDetails | VendorDetails;
   payment: PaymentInfo;
   status: RegistrationStatus;
   submittedAt: string;

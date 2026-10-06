@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { RELAY_CATEGORIES, INDIVIDUAL_DIVISIONS, RELAY_TEAM_SIZE } from '../types';
+import { RELAY_TEAM_SIZE } from '../types';
 import { INCLUSIONS, DEFAULT_ENTRY_FEE } from '../data/event';
 import { fetchIndividualCategories } from '../api/individualApi';
 import { fetchRelayCategories } from '../api/teamApi';
@@ -30,49 +30,42 @@ export default function Categories() {
       key: 'relay',
       name: '10KM Corporate Relay',
       detail: `Teams of ${RELAY_TEAM_SIZE} runners share the baton over the full 10KM course — one entry fee covers the whole team.`,
-      tags: RELAY_CATEGORIES.map((c) => c.label),
       fee: feeFor(relayCategories, 'relay'),
     },
     {
       key: '5km',
       name: '5KM Individual Race & Walk',
       detail: 'Race it or walk it over 5KM — an easier distance for first-timers and casual runners.',
-      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
       fee: feeFor(individualCategories, '5km-individual'),
     },
     {
       key: '10km',
       name: '10KM Individual Race',
       detail: 'Race the 10KM course solo — for competitive and recreational runners alike.',
-      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
       fee: feeFor(individualCategories, '10km-individual'),
     },
     {
       key: '21km',
       name: '21KM Individual Race & Walk',
       detail: 'Take on the half-marathon distance — race it competitively or walk it at your own pace.',
-      tags: INDIVIDUAL_DIVISIONS.map((d) => d.label),
       fee: feeFor(individualCategories, '21km-individual'),
     },
     {
       key: 'ceo',
       name: '100m CEO Race',
       detail: 'A fast, fun sprint reserved for company chief executives — bragging rights on the line.',
-      tags: [] as string[],
       fee: feeFor(individualCategories, '100m-ceo'),
     },
     {
       key: 'directors',
       name: '100m Directors Race',
       detail: 'A fast, fun sprint for company directors and senior leadership.',
-      tags: [] as string[],
       fee: feeFor(individualCategories, '100m-directors'),
     },
     {
       key: 'kids',
       name: 'Kids Athletics',
       detail: 'Fun athletics activities for children — open to families joining us on race day.',
-      tags: [] as string[],
       fee: feeFor(individualCategories, 'kids-athletics'),
     },
   ];
@@ -98,7 +91,6 @@ export default function Categories() {
                 <thead>
                   <tr>
                     <th>Category</th>
-                    <th className="pricing-table-divisions-col">Divisions</th>
                     <th className="pricing-table-fee-col">Entry fee</th>
                   </tr>
                 </thead>
@@ -108,17 +100,6 @@ export default function Categories() {
                       <td>
                         <div className="pricing-table-name">{r.name}</div>
                         <div className="pricing-table-detail">{r.detail}</div>
-                      </td>
-                      <td className="pricing-table-divisions-col">
-                        {r.tags.length ? (
-                          <ul className="tag-list">
-                            {r.tags.map((t) => (
-                              <li key={t}>{t}</li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <span className="pricing-table-dash">—</span>
-                        )}
                       </td>
                       <td className="pricing-table-fee-col">
                         <span className="pricing-table-fee">{`K${r.fee}`}</span>

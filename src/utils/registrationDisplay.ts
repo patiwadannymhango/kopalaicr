@@ -1,5 +1,5 @@
-import type { IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
-import { RACE_CATEGORIES, INDIVIDUAL_DIVISIONS, RELAY_CATEGORIES } from '../types';
+import type { IndividualBatchDetails, IndividualDetails, RegistrationRecord, TeamDetails, VendorDetails } from '../types';
+import { RACE_CATEGORIES, RELAY_CATEGORIES } from '../types';
 
 const STATUS_LABEL: Record<string, string> = {
   confirmed: 'Confirmed',
@@ -23,6 +23,10 @@ export function displayName(record: RegistrationRecord): string {
     const d = record.details as VendorDetails;
     return `${d.businessName} — ${d.contactPerson}`.trim();
   }
+  if (record.entryType === 'individual-batch') {
+    const d = record.details as IndividualBatchDetails;
+    return `${d.submittedBy.fullName} — group of ${d.members.length}`;
+  }
   const d = record.details as IndividualDetails;
   return d.fullName;
 }
@@ -39,9 +43,11 @@ export function categoryLabel(record: RegistrationRecord): string {
     const d = record.details as VendorDetails;
     return d.categoryName || d.category;
   }
+  if (record.entryType === 'individual-batch') {
+    const d = record.details as IndividualBatchDetails;
+    return `Group registration (${d.members.length} ${d.members.length === 1 ? 'person' : 'people'})`;
+  }
   const d = record.details as IndividualDetails;
   const category = RACE_CATEGORIES.find((c) => c.value === d.raceCategory);
-  const division = INDIVIDUAL_DIVISIONS.find((v) => v.value === d.division);
-  if (!category) return '';
-  return division ? `${category.label} — ${division.label}` : category.label;
+  return category ? category.label : '';
 }
