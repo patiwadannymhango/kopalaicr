@@ -61,7 +61,7 @@ function LayoutInner() {
               </div>
               <div>
                 <span className="footer-label">Register</span>
-                <button type="button" onClick={() => open('team')}>Group | Relay Registration</button>
+                <button type="button" onClick={() => open('team')}>Group Registration</button>
                 <button type="button" onClick={() => open('individual')}>Individual entry</button>
                 <Link to="/exhibitors">Exhibitor entry</Link>
                 <a href="/#track">Track registration</a>
