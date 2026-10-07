@@ -106,13 +106,9 @@ export default function TeamRegistration() {
       !details.raceCategory ||
       !details.participantCount ||
       !Number.isInteger(participantCount) ||
-      participantCount < 1 ||
-      !details.captainFirstName ||
-      !details.captainLastName ||
-      !details.captainEmail ||
-      !details.captainPhone
+      participantCount < 1
     ) {
-      setError('Please fill in the organization, race category, number of participants and captain details.');
+      setError('Please fill in the organization, race category and number of participants.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -312,16 +308,16 @@ export default function TeamRegistration() {
           )}
 
           <div className="grid-2">
-            <Field label="Captain first name" required>
+            <Field label="Team Lead first name">
               <input value={details.captainFirstName} onChange={(e) => update('captainFirstName', e.target.value)} />
             </Field>
-            <Field label="Captain last name" required>
+            <Field label="Team Lead last name">
               <input value={details.captainLastName} onChange={(e) => update('captainLastName', e.target.value)} />
             </Field>
-            <Field label="Captain email" required>
+            <Field label="Team Lead email">
               <input type="email" value={details.captainEmail} onChange={(e) => update('captainEmail', e.target.value)} placeholder="you@example.com" />
             </Field>
-            <Field label="Captain phone" required>
+            <Field label="Team Lead phone">
               <input value={details.captainPhone} onChange={(e) => update('captainPhone', e.target.value)} placeholder="e.g. 097 000 0000" />
             </Field>
           </div>
@@ -399,8 +395,12 @@ export default function TeamRegistration() {
           <h2>{record.status === 'pending-bank-transfer' ? 'Registration submitted' : 'Registration confirmed'}</h2>
           <p className="hint">
             {record.status === 'pending-bank-transfer'
-              ? `We've saved your team's registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${details.captainEmail}.`
-              : `A confirmation has been sent to ${details.captainEmail}. Keep your reference safe — you'll need it to look up your entry later.`}
+              ? details.captainEmail
+                ? `We've saved your team's registration. Complete the bank transfer using the details provided, and we'll confirm your entry by email once it's received at ${details.captainEmail}.`
+                : "We've saved your team's registration. Complete the bank transfer using the details provided, and we'll confirm your entry once it's received."
+              : details.captainEmail
+                ? `A confirmation has been sent to ${details.captainEmail}. Keep your reference safe — you'll need it to look up your entry later.`
+                : "Keep your reference safe — you'll need it to look up your entry later."}
           </p>
 
           {record.reference && (

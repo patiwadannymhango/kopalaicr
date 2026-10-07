@@ -56,9 +56,9 @@ function buildRows(record: RegistrationRecord): [string, string][] {
     add('Organization | Club', d.teamName || d.companyOrInstitution);
     add('Race Category', d.raceCategoryName);
     add('Number of participants', d.participantCount ? `${d.participantCount}` : '');
-    add('Captain', `${d.captainFirstName} ${d.captainLastName}`.trim());
-    add('Captain email', d.captainEmail);
-    add('Captain phone', d.captainPhone);
+    add('Team Lead', `${d.captainFirstName} ${d.captainLastName}`.trim());
+    add('Team Lead email', d.captainEmail);
+    add('Team Lead phone', d.captainPhone);
     if (d.roster.length) add('Runners submitted', `${d.roster.length}`);
   } else if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;

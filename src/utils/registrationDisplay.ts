@@ -13,11 +13,13 @@ export function statusLabel(status: string): string {
 }
 
 /** A human name to show for a registration regardless of whether it's an
- * individual entrant or a team (identified by its captain). */
+ * individual entrant or a team (identified by its team lead, if given —
+ * that contact is optional on the team form). */
 export function displayName(record: RegistrationRecord): string {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
-    return `${d.teamName} — ${d.captainFirstName} ${d.captainLastName} (captain)`.trim();
+    const leadName = `${d.captainFirstName} ${d.captainLastName}`.trim();
+    return leadName ? `${d.teamName} — ${leadName} (team lead)` : d.teamName;
   }
   if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;
