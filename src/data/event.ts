@@ -131,12 +131,13 @@ export const PARTNER_LOGOS = [
   { name: 'Vatra Mineral Water', file: '/logos/vatra.png' },
 ];
 
-/** Left blank until the organisers confirm official banking details — the
- * bank transfer step on the Register page shows "coming soon" while
- * these are empty rather than displaying a placeholder account number. */
+/** The ZAAA/ICR account — the bank transfer step on the Register page
+ * shows "coming soon" instead whenever these are empty. */
 export const BANK_DETAILS = {
-  bankName: '',
-  accountName: '',
-  accountNumber: '',
-  branch: '',
+  bankName: 'ZANACO',
+  accountName: 'ZAAA/ICR',
+  accountNumber: '0381898400108',
+  branch: 'Cairo Road Business Centre',
+  sortCode: '010040',
+  swiftCode: 'ZNCOZMLU',
 };

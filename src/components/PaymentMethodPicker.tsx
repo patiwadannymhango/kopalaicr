@@ -154,20 +154,16 @@ export default function PaymentMethodPicker({
               <div className="summary-row"><span>Account name</span><strong>{BANK_DETAILS.accountName}</strong></div>
               <div className="summary-row"><span>Account number</span><strong>{BANK_DETAILS.accountNumber}</strong></div>
               <div className="summary-row"><span>Branch</span><strong>{BANK_DETAILS.branch}</strong></div>
+              <div className="summary-row"><span>Sort code</span><strong>{BANK_DETAILS.sortCode}</strong></div>
+              <div className="summary-row"><span>Swift code</span><strong>{BANK_DETAILS.swiftCode}</strong></div>
             </div>
           ) : (
             <p className="hint coming-soon">Bank account details coming soon — check back closer to race day.</p>
           )}
           <p className="hint">
-            After completing the transfer, send your proof of payment to us on WhatsApp
-            {EVENT.phone ? (
-              <>
-                {' '}
-                at <strong>{EVENT.phone}</strong>
-              </>
-            ) : null}
-            . We'll confirm your entry by email once it's received — your reference will show as{' '}
-            <em>awaiting bank transfer</em> until then.
+            After completing the transfer, send your proof of payment to us at{' '}
+            <strong>{EVENT.email}</strong>. We'll confirm your entry by email once it's received — your
+            reference will show as <em>awaiting bank transfer</em> until then.
           </p>
         </>
       )}
