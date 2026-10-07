@@ -22,7 +22,12 @@ export async function submitTeamRegistration(details: TeamDetails): Promise<Subm
       // which the backend's IntegerField would reject outright.
       roster: details.roster
         .filter((r) => r.fullName.trim())
-        .map((r) => ({ fullName: r.fullName, gender: r.gender, age: r.age ? Number(r.age) : null })),
+        .map((r) => ({
+          fullName: r.fullName,
+          gender: r.gender,
+          age: r.age ? Number(r.age) : null,
+          raceCategory: r.raceCategory,
+        })),
     }),
   });
 }

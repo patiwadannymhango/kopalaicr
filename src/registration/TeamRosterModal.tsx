@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { Gender, RunnerRosterEntry } from '../types';
 import Modal from '../components/Modal';
+import type { BackendCategory } from '../api/individualApi';
 
 function emptyEntry(): RunnerRosterEntry {
-  return { fullName: '', gender: '', age: '' };
+  return { fullName: '', gender: '', age: '', raceCategory: '' };
 }
 
 export default function TeamRosterModal({
@@ -11,12 +12,14 @@ export default function TeamRosterModal({
   onClose,
   participantCount,
   roster,
+  categories,
   onSave,
 }: {
   open: boolean;
   onClose: () => void;
   participantCount: number;
   roster: RunnerRosterEntry[];
+  categories: BackendCategory[] | null;
   onSave: (roster: RunnerRosterEntry[]) => void;
 }) {
   const [rows, setRows] = useState<RunnerRosterEntry[]>([]);
@@ -52,6 +55,7 @@ export default function TeamRosterModal({
               <tr>
                 <th>#</th>
                 <th>Full name</th>
+                <th>Race Category</th>
                 <th>Gender</th>
                 <th>Age</th>
               </tr>
@@ -62,6 +66,14 @@ export default function TeamRosterModal({
                   <td className="bulk-table-num">{i + 1}</td>
                   <td>
                     <input value={row.fullName} onChange={(e) => updateRow(i, 'fullName', e.target.value)} />
+                  </td>
+                  <td>
+                    <select value={row.raceCategory} onChange={(e) => updateRow(i, 'raceCategory', e.target.value)}>
+                      <option value="">—</option>
+                      {categories?.map((c) => (
+                        <option key={c.code} value={c.code}>{c.name}</option>
+                      ))}
+                    </select>
                   </td>
                   <td>
                     <select value={row.gender} onChange={(e) => updateRow(i, 'gender', e.target.value as Gender)}>

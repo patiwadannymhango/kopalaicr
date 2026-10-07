@@ -432,6 +432,7 @@ export default function TeamRegistration() {
         onClose={() => setRosterModalOpen(false)}
         participantCount={hasValidParticipantCount ? participantCountNum : 0}
         roster={details.roster}
+        categories={categories}
         onSave={(roster) => setDetails((d) => ({ ...d, roster }))}
       />
     </div>

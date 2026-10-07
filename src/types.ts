@@ -98,6 +98,7 @@ export interface RunnerRosterEntry {
   fullName: string;
   gender: Gender;
   age: string;
+  raceCategory: string; // backend Category code — which race this person runs
 }
 
 export interface TeamDetails {
