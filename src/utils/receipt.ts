@@ -38,7 +38,7 @@ function buildRows(record: RegistrationRecord): [string, string][] {
 
   const entryTypeLabel =
     record.entryType === 'team'
-      ? '10KM Corporate Relay (team)'
+      ? 'Group registration'
       : record.entryType === 'vendor'
         ? 'Exhibitor entry'
         : record.entryType === 'individual-batch'
@@ -54,12 +54,16 @@ function buildRows(record: RegistrationRecord): [string, string][] {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
     add('Organization | Club', d.teamName || d.companyOrInstitution);
-    add('Race Category', d.raceCategoryName);
     add('Number of participants', d.participantCount ? `${d.participantCount}` : '');
     add('Team Lead', `${d.captainFirstName} ${d.captainLastName}`.trim());
     add('Team Lead email', d.captainEmail);
     add('Team Lead phone', d.captainPhone);
-    if (d.roster.length) add('Runners submitted', `${d.roster.length}`);
+    if (d.roster.length) {
+      add(
+        'Participants',
+        d.roster.map((r) => `${r.fullName} (${r.raceCategoryName || r.raceCategory})`).join('; ')
+      );
+    }
   } else if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;
     add('Business name', d.businessName);

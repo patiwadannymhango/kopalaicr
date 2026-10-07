@@ -98,19 +98,13 @@ export interface RunnerRosterEntry {
   fullName: string;
   gender: Gender;
   age: string;
-  raceCategory: string; // backend Category code — which race this person runs
+  raceCategory: string; // backend Category code — which race this person runs, required
+  raceCategoryName: string; // resolved display name, set alongside raceCategory when chosen
 }
 
 export interface TeamDetails {
   teamName: string;
   companyOrInstitution: string;
-  raceCategory: string; // backend Category code (5km-corporate-relay, relay, 100m-ceo-relay, ...)
-  /** Display name for `raceCategory` (e.g. "10KM Corporate Relay") — team
-   * race categories are entirely backend-driven, like VendorDetails.category,
-   * so there's no static list to resolve this from later. Set when the
-   * category is chosen; ignored by the backend (extra JSON fields are
-   * simply dropped by the serializer). */
-  raceCategoryName: string;
   captainFirstName: string;
   captainLastName: string;
   captainEmail: string;

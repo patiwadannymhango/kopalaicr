@@ -38,7 +38,8 @@ export function displayName(record: RegistrationRecord): string {
 export function categoryLabel(record: RegistrationRecord): string {
   if (record.entryType === 'team') {
     const d = record.details as TeamDetails;
-    return d.raceCategoryName || '';
+    const names = [...new Set(d.roster.map((r) => r.raceCategoryName || r.raceCategory).filter(Boolean))];
+    return names.join(', ');
   }
   if (record.entryType === 'vendor') {
     const d = record.details as VendorDetails;

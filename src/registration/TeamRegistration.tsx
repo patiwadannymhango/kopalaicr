@@ -15,8 +15,6 @@ import TeamRosterModal from './TeamRosterModal';
 const initialDetails: TeamDetails = {
   teamName: '',
   companyOrInstitution: '',
-  raceCategory: '',
-  raceCategoryName: '',
   captainFirstName: '',
   captainLastName: '',
   captainEmail: '',
@@ -46,7 +44,6 @@ export default function TeamRegistration() {
   const [submitting, setSubmitting] = useState(false);
   const [record, setRecord] = useState<RegistrationRecord | null>(null);
   const [downloading, setDownloading] = useState(false);
-  const [wantsRoster, setWantsRoster] = useState(false);
   const [rosterModalOpen, setRosterModalOpen] = useState(false);
 
   const { pending, setPending, elapsed, outcome, timeoutMs, retry, keepWaiting } = usePendingPayment(
@@ -75,44 +72,34 @@ export default function TeamRegistration() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const selectedCategory = categories?.find((c) => c.code === details.raceCategory);
-  const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
   const participantCountNum = Number(details.participantCount);
   const hasValidParticipantCount = Number.isInteger(participantCountNum) && participantCountNum >= 1;
-  // The roster checkbox hides the Race Category field once checked, so a
-  // category must already be chosen — otherwise checking it would hide a
-  // still-required, still-empty field with no way to fix it.
-  const canUseRoster = hasValidParticipantCount && !!details.raceCategory;
+
+  // No single group-wide category anymore — every participant picks their
+  // own race in the roster table, and the group's fee is the sum of each
+  // of their own category prices (same model as Individual's "register
+  // multiple people" flow).
+  const rosterComplete =
+    details.roster.length === participantCountNum &&
+    details.roster.every((r) => r.fullName.trim() && r.raceCategory);
+  const fee = rosterComplete
+    ? details.roster.reduce((sum, r) => {
+        const category = categories?.find((c) => c.code === r.raceCategory);
+        return sum + (Number(category?.price) || 0);
+      }, 0)
+    : null;
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
   }
 
-  function handleCategoryChange(code: string) {
-    const category = categories?.find((c) => c.code === code);
-    setDetails((d) => ({ ...d, raceCategory: code, raceCategoryName: category?.name ?? '' }));
-  }
-
-  function handleWantsRosterChange(checked: boolean) {
-    setWantsRoster(checked);
-    if (checked) {
-      setRosterModalOpen(true);
-    } else {
-      setDetails((d) => ({ ...d, roster: [] }));
-    }
-  }
-
   function handleDetailsContinue() {
-    const participantCount = Number(details.participantCount);
-    if (
-      !details.teamName ||
-      !details.companyOrInstitution ||
-      !details.raceCategory ||
-      !details.participantCount ||
-      !Number.isInteger(participantCount) ||
-      participantCount < 1
-    ) {
-      setError('Please fill in the organization, race category and number of participants.');
+    if (!details.teamName || !details.companyOrInstitution || !hasValidParticipantCount) {
+      setError('Please fill in the organization and number of participants.');
+      return;
+    }
+    if (!rosterComplete) {
+      setError('Please add the participant list — every person needs a full name and race category.');
       return;
     }
     if (!details.acceptedTerms) {
@@ -223,7 +210,6 @@ export default function TeamRegistration() {
     setPayment(initialPayment);
     setStep('details');
     setRecord(null);
-    setWantsRoster(false);
   }
 
   async function handleDownload() {
@@ -276,44 +262,25 @@ export default function TeamRegistration() {
             </Field>
           </div>
 
-          <label className="checkbox-row" title={canUseRoster ? undefined : 'Enter the number of participants and pick a race category first'}>
-            <input
-              type="checkbox"
-              checked={wantsRoster}
-              disabled={!canUseRoster}
-              onChange={(e) => handleWantsRosterChange(e.target.checked)}
-            />
-            Add a participant list (optional) — name, gender and age for each person
-          </label>
+          <button
+            type="button"
+            className="btn-ghost"
+            disabled={!hasValidParticipantCount}
+            title={hasValidParticipantCount ? undefined : 'Enter the number of participants first'}
+            onClick={() => setRosterModalOpen(true)}
+          >
+            {details.roster.length > 0 ? `Edit participant list (${details.roster.length})` : 'Add participant list'}
+          </button>
 
-          {wantsRoster && (
-            <button type="button" className="btn-ghost" onClick={() => setRosterModalOpen(true)}>
-              {details.roster.length > 0 ? `Edit participant list (${details.roster.length})` : 'Add participant details'}
-            </button>
-          )}
-
-          {!wantsRoster && (
-            <>
-              <Field label="Race Category" required>
-                <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-                  <option value="">Select category</option>
-                  {categories?.map((c) => (
-                    <option key={c.code} value={c.code}>{c.name}</option>
-                  ))}
-                </select>
-              </Field>
-
-              {details.raceCategory && (
-                <div className="fee-preview">
-                  <span>Entry fee for {details.raceCategoryName}</span>
-                  {categories === null ? (
-                    <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
-                  ) : (
-                    <strong>{`K${fee}`}</strong>
-                  )}
-                </div>
+          {rosterComplete && (
+            <div className="fee-preview">
+              <span>Entry fee for {details.roster.length} {details.roster.length === 1 ? 'person' : 'people'}</span>
+              {categories === null ? (
+                <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
+              ) : (
+                <strong>{`K${fee}`}</strong>
               )}
-            </>
+            </div>
           )}
 
           <div className="grid-2">
@@ -347,12 +314,8 @@ export default function TeamRegistration() {
       {step === 'payment' && (
         <>
           <div className="summary-row">
-            <span>Category</span>
-            <strong>{selectedCategory?.name ?? details.raceCategoryName ?? '—'}</strong>
-          </div>
-          <div className="summary-row">
             <span>Participants</span>
-            <strong>{details.participantCount}</strong>
+            <strong>{details.roster.length}</strong>
           </div>
           <div className="summary-row">
             <span>Entry fee</span>

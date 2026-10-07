@@ -4,7 +4,7 @@ import Modal from '../components/Modal';
 import type { BackendCategory } from '../api/individualApi';
 
 function emptyEntry(): RunnerRosterEntry {
-  return { fullName: '', gender: '', age: '', raceCategory: '' };
+  return { fullName: '', gender: '', age: '', raceCategory: '', raceCategoryName: '' };
 }
 
 export default function TeamRosterModal({
@@ -23,6 +23,7 @@ export default function TeamRosterModal({
   onSave: (roster: RunnerRosterEntry[]) => void;
 }) {
   const [rows, setRows] = useState<RunnerRosterEntry[]>([]);
+  const [error, setError] = useState('');
 
   // Resized from the current participant count each time the modal opens,
   // preserving any values already entered (by position) — so bumping the
@@ -30,6 +31,7 @@ export default function TeamRosterModal({
   useEffect(() => {
     if (!open) return;
     setRows(Array.from({ length: participantCount }, (_, i) => roster[i] ?? emptyEntry()));
+    setError('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -37,7 +39,20 @@ export default function TeamRosterModal({
     setRows((prev) => prev.map((r, i) => (i === index ? { ...r, [key]: value } : r)));
   }
 
+  function updateRaceCategory(index: number, code: string) {
+    const category = categories?.find((c) => c.code === code);
+    setRows((prev) =>
+      prev.map((r, i) => (i === index ? { ...r, raceCategory: code, raceCategoryName: category?.name ?? '' } : r))
+    );
+  }
+
   function handleSave() {
+    const incomplete = rows.some((r) => !r.fullName.trim() || !r.raceCategory);
+    if (incomplete) {
+      setError('Every person needs a full name and a race category.');
+      return;
+    }
+    setError('');
     onSave(rows);
     onClose();
   }
@@ -46,7 +61,7 @@ export default function TeamRosterModal({
     <Modal open={open} onClose={onClose} title="Participant list" wide>
       <div className="panel-form">
         <p className="hint">
-          List each of the {participantCount} {participantCount === 1 ? 'person' : 'people'} running — all optional, but it helps us plan the race.
+          List each of the {participantCount} {participantCount === 1 ? 'person' : 'people'} running — full name and race category are required for everyone.
         </p>
 
         <div className="bulk-table-wrap">
@@ -54,8 +69,8 @@ export default function TeamRosterModal({
             <thead>
               <tr>
                 <th>#</th>
-                <th>Full name</th>
-                <th>Race Category</th>
+                <th>Full name *</th>
+                <th>Race Category *</th>
                 <th>Gender</th>
                 <th>Age</th>
               </tr>
@@ -65,11 +80,19 @@ export default function TeamRosterModal({
                 <tr key={i}>
                   <td className="bulk-table-num">{i + 1}</td>
                   <td>
-                    <input value={row.fullName} onChange={(e) => updateRow(i, 'fullName', e.target.value)} />
+                    <input
+                      className={!row.fullName.trim() && error ? 'has-error' : ''}
+                      value={row.fullName}
+                      onChange={(e) => updateRow(i, 'fullName', e.target.value)}
+                    />
                   </td>
                   <td>
-                    <select value={row.raceCategory} onChange={(e) => updateRow(i, 'raceCategory', e.target.value)}>
-                      <option value="">—</option>
+                    <select
+                      className={!row.raceCategory && error ? 'has-error' : ''}
+                      value={row.raceCategory}
+                      onChange={(e) => updateRaceCategory(i, e.target.value)}
+                    >
+                      <option value="">Select race</option>
                       {categories?.map((c) => (
                         <option key={c.code} value={c.code}>{c.name}</option>
                       ))}
@@ -96,6 +119,8 @@ export default function TeamRosterModal({
             </tbody>
           </table>
         </div>
+
+        {error && <p className="error">{error}</p>}
 
         <button className="btn-primary btn-full" onClick={handleSave}>
           Save participant list
