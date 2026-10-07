@@ -79,6 +79,10 @@ export default function TeamRegistration() {
   const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
   const participantCountNum = Number(details.participantCount);
   const hasValidParticipantCount = Number.isInteger(participantCountNum) && participantCountNum >= 1;
+  // The roster checkbox hides the Race Category field once checked, so a
+  // category must already be chosen — otherwise checking it would hide a
+  // still-required, still-empty field with no way to fix it.
+  const canUseRoster = hasValidParticipantCount && !!details.raceCategory;
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
@@ -270,21 +274,13 @@ export default function TeamRegistration() {
                 placeholder="e.g. 8"
               />
             </Field>
-            <Field label="Race Category" required>
-              <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-                <option value="">Select category</option>
-                {categories?.map((c) => (
-                  <option key={c.code} value={c.code}>{c.name}</option>
-                ))}
-              </select>
-            </Field>
           </div>
 
-          <label className="checkbox-row" title={hasValidParticipantCount ? undefined : 'Enter the number of participants first'}>
+          <label className="checkbox-row" title={canUseRoster ? undefined : 'Enter the number of participants and pick a race category first'}>
             <input
               type="checkbox"
               checked={wantsRoster}
-              disabled={!hasValidParticipantCount}
+              disabled={!canUseRoster}
               onChange={(e) => handleWantsRosterChange(e.target.checked)}
             />
             Add a participant list (optional) — name, gender and age for each person
@@ -296,15 +292,28 @@ export default function TeamRegistration() {
             </button>
           )}
 
-          {details.raceCategory && (
-            <div className="fee-preview">
-              <span>Entry fee for {details.raceCategoryName}</span>
-              {categories === null ? (
-                <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
-              ) : (
-                <strong>{`K${fee}`}</strong>
+          {!wantsRoster && (
+            <>
+              <Field label="Race Category" required>
+                <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
+                  <option value="">Select category</option>
+                  {categories?.map((c) => (
+                    <option key={c.code} value={c.code}>{c.name}</option>
+                  ))}
+                </select>
+              </Field>
+
+              {details.raceCategory && (
+                <div className="fee-preview">
+                  <span>Entry fee for {details.raceCategoryName}</span>
+                  {categories === null ? (
+                    <span className="fee-loading"><Spinner size={13} /> Fetching…</span>
+                  ) : (
+                    <strong>{`K${fee}`}</strong>
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
 
           <div className="grid-2">
