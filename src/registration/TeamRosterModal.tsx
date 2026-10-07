@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import type { Gender, RunnerRosterEntry } from '../types';
+import type { AgeRange, Gender, RunnerRosterEntry } from '../types';
 import Modal from '../components/Modal';
 import type { BackendCategory } from '../api/individualApi';
 
 function emptyEntry(): RunnerRosterEntry {
-  return { fullName: '', gender: '', age: '', raceCategory: '', raceCategoryName: '' };
+  return { fullName: '', gender: '', ageRange: '', raceCategory: '', raceCategoryName: '' };
 }
 
 export default function TeamRosterModal({
@@ -72,7 +72,7 @@ export default function TeamRosterModal({
                 <th>Full name *</th>
                 <th>Race Category *</th>
                 <th>Gender</th>
-                <th>Age</th>
+                <th>Age range</th>
               </tr>
             </thead>
             <tbody>
@@ -106,13 +106,15 @@ export default function TeamRosterModal({
                     </select>
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      min={0}
-                      max={120}
-                      value={row.age}
-                      onChange={(e) => updateRow(i, 'age', e.target.value)}
-                    />
+                    <select value={row.ageRange} onChange={(e) => updateRow(i, 'ageRange', e.target.value as AgeRange)}>
+                      <option value="">—</option>
+                      <option value="Under 18">Under 18</option>
+                      <option value="18-29">18–29</option>
+                      <option value="30-39">30–39</option>
+                      <option value="40-49">40–49</option>
+                      <option value="50-59">50–59</option>
+                      <option value="60+">60+</option>
+                    </select>
                   </td>
                 </tr>
               ))}

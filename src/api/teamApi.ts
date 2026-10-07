@@ -18,13 +18,10 @@ export async function submitTeamRegistration(details: TeamDetails): Promise<Subm
     method: 'POST',
     body: JSON.stringify({
       ...details,
-      // Send age as a number (or omit it) rather than the empty-string
-      // the number input holds when left blank, which the backend's
-      // IntegerField would reject outright.
       roster: details.roster.map((r) => ({
         fullName: r.fullName,
         gender: r.gender,
-        age: r.age ? Number(r.age) : null,
+        ageRange: r.ageRange,
         raceCategory: r.raceCategory,
       })),
     }),

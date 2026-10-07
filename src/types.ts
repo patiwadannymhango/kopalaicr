@@ -97,7 +97,7 @@ export interface IndividualBatchDetails {
 export interface RunnerRosterEntry {
   fullName: string;
   gender: Gender;
-  age: string;
+  ageRange: AgeRange;
   raceCategory: string; // backend Category code — which race this person runs, required
   raceCategoryName: string; // resolved display name, set alongside raceCategory when chosen
 }
