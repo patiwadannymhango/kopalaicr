@@ -261,14 +261,6 @@ export default function TeamRegistration() {
                 placeholder="e.g. Kansanshi Runners"
               />
             </Field>
-            <Field label="Race Category" required>
-              <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-                <option value="">Select category</option>
-                {categories?.map((c) => (
-                  <option key={c.code} value={c.code}>{c.name}</option>
-                ))}
-              </select>
-            </Field>
             <Field label="Number of participants" required>
               <input
                 type="number"
@@ -277,6 +269,14 @@ export default function TeamRegistration() {
                 onChange={(e) => update('participantCount', e.target.value)}
                 placeholder="e.g. 8"
               />
+            </Field>
+            <Field label="Race Category" required>
+              <select value={details.raceCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
+                <option value="">Select category</option>
+                {categories?.map((c) => (
+                  <option key={c.code} value={c.code}>{c.name}</option>
+                ))}
+              </select>
             </Field>
           </div>
 
