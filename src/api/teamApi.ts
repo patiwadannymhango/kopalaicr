@@ -13,6 +13,15 @@ export async function fetchRelayCategories(): Promise<BackendCategory[]> {
 export async function submitTeamRegistration(details: TeamDetails): Promise<SubmitRegistrationResult> {
   return apiFetch<SubmitRegistrationResult>('/registrations/team/', {
     method: 'POST',
-    body: JSON.stringify(details),
+    body: JSON.stringify({
+      ...details,
+      // The roster is an optional, pre-sized-to-headcount table — drop any
+      // row nobody filled in, and send age as a number (or omit it) rather
+      // than the empty-string the number input holds when left blank,
+      // which the backend's IntegerField would reject outright.
+      roster: details.roster
+        .filter((r) => r.fullName.trim())
+        .map((r) => ({ fullName: r.fullName, gender: r.gender, age: r.age ? Number(r.age) : null })),
+    }),
   });
 }

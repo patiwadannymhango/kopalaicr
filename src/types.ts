@@ -97,6 +97,7 @@ export interface IndividualBatchDetails {
 export interface RunnerRosterEntry {
   fullName: string;
   gender: Gender;
+  age: string;
 }
 
 export interface TeamDetails {

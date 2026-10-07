@@ -10,6 +10,7 @@ import ProcessingPanel from '../components/ProcessingPanel';
 import Spinner from '../components/Spinner';
 import Field from '../components/Field';
 import { downloadReceipt } from '../utils/receipt';
+import TeamRosterModal from './TeamRosterModal';
 
 const initialDetails: TeamDetails = {
   teamName: '',
@@ -45,6 +46,8 @@ export default function TeamRegistration() {
   const [submitting, setSubmitting] = useState(false);
   const [record, setRecord] = useState<RegistrationRecord | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [wantsRoster, setWantsRoster] = useState(false);
+  const [rosterModalOpen, setRosterModalOpen] = useState(false);
 
   const { pending, setPending, elapsed, outcome, timeoutMs, retry, keepWaiting } = usePendingPayment(
     'kicr-team-pending',
@@ -74,6 +77,8 @@ export default function TeamRegistration() {
 
   const selectedCategory = categories?.find((c) => c.code === details.raceCategory);
   const fee = details.raceCategory ? Number(selectedCategory?.price) || DEFAULT_ENTRY_FEE : null;
+  const participantCountNum = Number(details.participantCount);
+  const hasValidParticipantCount = Number.isInteger(participantCountNum) && participantCountNum >= 1;
 
   function update<K extends keyof TeamDetails>(key: K, value: TeamDetails[K]) {
     setDetails((d) => ({ ...d, [key]: value }));
@@ -82,6 +87,15 @@ export default function TeamRegistration() {
   function handleCategoryChange(code: string) {
     const category = categories?.find((c) => c.code === code);
     setDetails((d) => ({ ...d, raceCategory: code, raceCategoryName: category?.name ?? '' }));
+  }
+
+  function handleWantsRosterChange(checked: boolean) {
+    setWantsRoster(checked);
+    if (checked) {
+      setRosterModalOpen(true);
+    } else {
+      setDetails((d) => ({ ...d, roster: [] }));
+    }
   }
 
   function handleDetailsContinue() {
@@ -209,6 +223,7 @@ export default function TeamRegistration() {
     setPayment(initialPayment);
     setStep('details');
     setRecord(null);
+    setWantsRoster(false);
   }
 
   async function handleDownload() {
@@ -268,6 +283,22 @@ export default function TeamRegistration() {
               />
             </Field>
           </div>
+
+          <label className="checkbox-row" title={hasValidParticipantCount ? undefined : 'Enter the number of participants first'}>
+            <input
+              type="checkbox"
+              checked={wantsRoster}
+              disabled={!hasValidParticipantCount}
+              onChange={(e) => handleWantsRosterChange(e.target.checked)}
+            />
+            Add a participant list (optional) — name, gender and age for each person
+          </label>
+
+          {wantsRoster && (
+            <button type="button" className="btn-ghost" onClick={() => setRosterModalOpen(true)}>
+              {details.roster.length > 0 ? `Edit participant list (${details.roster.length})` : 'Add participant details'}
+            </button>
+          )}
 
           {details.raceCategory && (
             <div className="fee-preview">
@@ -395,6 +426,14 @@ export default function TeamRegistration() {
           </div>
         </div>
       )}
+
+      <TeamRosterModal
+        open={rosterModalOpen}
+        onClose={() => setRosterModalOpen(false)}
+        participantCount={hasValidParticipantCount ? participantCountNum : 0}
+        roster={details.roster}
+        onSave={(roster) => setDetails((d) => ({ ...d, roster }))}
+      />
     </div>
   );
 }
